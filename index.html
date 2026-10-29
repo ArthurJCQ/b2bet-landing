@@ -1,754 +1,909 @@
 <!doctype html>
-<html lang="fr" class="scroll-smooth">
+<html lang="fr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Riddono — Pariez pour le bien commun</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Betty — Les paris entre collègues, pour la bonne cause</title>
+    <meta name="description" content="Betty est l’app de paris entre collègues : on mise des points, pas d’argent, et l’entreprise reverse une dotation aux associations choisies par ses équipes.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
-                }
-            }
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
     <style>
-        .gradient-ring {
-            background: conic-gradient(from 180deg at 50% 50%, #22d3ee 0deg, #818cf8 120deg, #f472b6 240deg, #22d3ee 360deg);
+        /* Tokens from the app's "Pile" design (b2bet-mobile src/ui/theme), default brand #001733 / #D33857. */
+        :root {
+            --primary: #001733;
+            --on-primary: #FFFFFF;
+            --primary-soft: #293C54;
+            --primary-ink: #001733;
+            --p06: #F0F1F3;
+            --p12: #DBDFE2;
+            --p20: #C2C7CE;
+            --secondary: #D33857;
+            --on-secondary: #FFFFFF;
+            --secondary-ink: #D33857;
+            --s12: #FAE7EB;
+            --s40: #E99CAB;
+            --text: #15161C;
+            --muted: #4D5262;
+            --body: #2A2E3A;
+            --handle: #D3D6DE;
+            --white: #FFFFFF;
+            --success: #17663F;
+            --success-bg: #E3F4EA;
+            --streak-bg: #FFE9D6;
+            --streak-fg: #8A3B00;
+            --radius-lg: 24px;
+            --radius-xl: 28px;
+            --radius-sheet: 32px;
+            --shadow-floating: 0 8px 24px rgba(0, 23, 51, .25);
+            --shadow-raised: 0 6px 18px rgba(0, 23, 51, .08);
+            --font: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
         }
-        .hero-glow {
-            background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(99,102,241,0.12) 0%, transparent 70%);
+
+        *, *::before, *::after { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { margin: 0; background: var(--p06); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+        a { color: inherit; }
+        h1, h2, h3, p { margin: 0; }
+        img { max-width: 100%; }
+        .container { max-width: 1160px; margin: 0 auto; padding: 0 20px; }
+        .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+        /* Brand placeholders: replace with the Betty logo and logotype once they exist. */
+        .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-placeholder {
+            width: 40px; height: 40px; border-radius: 14px; flex-shrink: 0;
+            border: 2px dashed currentColor; opacity: .85;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 9px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase;
         }
-        .app-shadow {
-            box-shadow: 0 25px 80px -12px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+        .logotype-placeholder { font-size: 22px; font-weight: 700; letter-spacing: -.6px; }
+
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            height: 52px; padding: 0 24px; border-radius: 999px; border: 0;
+            font: 600 16px var(--font); text-decoration: none; cursor: pointer;
+            transition: transform .15s ease, background-color .15s ease;
         }
-        .feature-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px -8px rgba(99,102,241,0.15);
+        .btn:hover { transform: translateY(-1px); }
+        .btn-secondary { background: var(--secondary); color: var(--on-secondary); }
+        .btn-secondary:hover { background: #BC2F4C; }
+        .btn-primary { background: var(--primary); color: var(--on-primary); }
+        .btn-ghost { background: var(--white); color: var(--primary-ink); }
+        .btn-outline { background: transparent; color: var(--on-primary); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .5); }
+        .btn-sm { height: 44px; padding: 0 18px; font-size: 15px; }
+
+        .pill { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 14px; border-radius: 999px; font-size: 14px; font-weight: 600; }
+
+        /* Header */
+        .site-header { position: sticky; top: 0; z-index: 50; padding: 12px 0; }
+        .site-header .bar {
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
+            padding: 8px 8px 8px 16px; border-radius: 999px;
+            background: var(--primary); color: var(--on-primary); box-shadow: var(--shadow-floating);
         }
-        .pricing-popular {
-            box-shadow: 0 25px 60px -12px rgba(99,102,241,0.25), 0 0 0 2px rgba(99,102,241,0.3);
+        .site-header nav { display: none; gap: 4px; }
+        .site-header nav a { padding: 10px 14px; border-radius: 999px; font-size: 15px; font-weight: 500; text-decoration: none; opacity: .85; }
+        .site-header nav a:hover { opacity: 1; background: var(--primary-soft); }
+        @media (min-width: 880px) { .site-header nav { display: flex; } }
+
+        /* Hero */
+        .hero { padding: 40px 0 72px; }
+        .hero-grid { display: grid; gap: 48px; align-items: center; }
+        @media (min-width: 960px) { .hero-grid { grid-template-columns: 1.05fr 1fr; } .hero { padding: 64px 0 96px; } }
+        .hero h1 { font-size: clamp(40px, 6vw, 68px); line-height: 1.02; letter-spacing: -2px; font-weight: 700; }
+        .hero h1 .accent { color: var(--secondary-ink); }
+        .hero .lead { margin-top: 22px; max-width: 540px; font-size: 19px; line-height: 1.55; color: var(--muted); }
+        .hero .actions { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 12px; }
+        .hero .facts { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 8px; }
+        .hero .facts .pill { background: var(--white); color: var(--body); font-weight: 500; }
+        .hero-visual { position: relative; display: flex; justify-content: center; min-height: 600px; }
+        .hero-visual .phone-back { position: absolute; transform: translate(42%, 40px) rotate(6deg); opacity: .98; }
+        .hero-visual .phone-front { position: relative; transform: translateX(-18%) rotate(-3deg); }
+        @media (max-width: 560px) {
+            .hero-visual { min-height: 0; }
+            .hero-visual .phone-back { display: none; }
+            .hero-visual .phone-front { transform: none; }
         }
-        .screenshot {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            border: 1px solid rgba(255,255,255,0.08);
+
+        /* Sections */
+        section.block { padding: 88px 0; }
+        section[id] { scroll-margin-top: 96px; }
+        .eyebrow { font-size: 14px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--secondary-ink); }
+        .section-head { max-width: 680px; }
+        .section-head h2 { margin-top: 10px; font-size: clamp(32px, 4.4vw, 48px); line-height: 1.08; letter-spacing: -1.4px; font-weight: 700; }
+        .section-head p { margin-top: 16px; font-size: 18px; line-height: 1.55; color: var(--muted); }
+        .on-dark { background: var(--primary); color: var(--on-primary); }
+        .on-dark .eyebrow { color: var(--s40); }
+        .on-dark .section-head p { color: rgba(255, 255, 255, .78); }
+
+        /* Features: a pile of white cards */
+        .features { margin-top: 48px; display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+        .card { background: var(--white); border-radius: var(--radius-lg); padding: 24px; }
+        .card h3 { margin-top: 18px; font-size: 20px; font-weight: 700; letter-spacing: -.3px; }
+        .card p { margin-top: 8px; font-size: 16px; line-height: 1.55; color: var(--muted); }
+        .icon-chip { width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+        .icon-chip.s { background: var(--s12); color: var(--secondary-ink); }
+        .icon-chip.p { background: var(--p12); color: var(--primary-ink); }
+        .card.feature-wide { grid-column: 1 / -1; background: var(--primary); color: var(--on-primary); display: grid; gap: 20px; align-items: center; }
+        .card.feature-wide p { color: rgba(255, 255, 255, .8); }
+        .card.feature-wide .icon-chip { background: var(--secondary); color: var(--on-secondary); }
+        @media (min-width: 760px) { .card.feature-wide { grid-template-columns: auto 1fr auto; padding: 28px 32px; } .card.feature-wide h3 { margin-top: 0; } }
+
+        /* How it works */
+        .steps { margin-top: 48px; display: grid; gap: 12px; }
+        @media (min-width: 900px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+        .step { background: var(--primary-soft); border-radius: var(--radius-xl); padding: 28px; display: flex; flex-direction: column; gap: 14px; }
+        .step .num { width: 44px; height: 44px; border-radius: 22px; background: var(--secondary); color: var(--on-secondary); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; }
+        .step h3 { font-size: 22px; letter-spacing: -.4px; }
+        .step p { font-size: 16px; line-height: 1.6; color: rgba(255, 255, 255, .82); }
+        .step .who { font-size: 13px; font-weight: 600; opacity: .7; text-transform: uppercase; letter-spacing: .6px; }
+
+        /* Screens carousel */
+        .screens { margin-top: 48px; display: flex; gap: 28px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 8px 20px 32px; margin-left: -20px; margin-right: -20px; }
+        .screens figure { margin: 0; flex-shrink: 0; scroll-snap-align: center; display: flex; flex-direction: column; gap: 16px; }
+        .screens figcaption { max-width: 312px; padding: 0 6px; }
+        .screens figcaption strong { display: block; font-size: 18px; letter-spacing: -.3px; }
+        .screens figcaption span { display: block; margin-top: 4px; font-size: 15px; line-height: 1.5; color: var(--muted); }
+        .scroll-hint { margin-top: 4px; font-size: 14px; color: var(--muted); }
+
+        /* Secret wagers + charity */
+        .split { display: grid; gap: 12px; margin-top: 48px; }
+        @media (min-width: 900px) { .split { grid-template-columns: 1fr 1fr; } }
+        .split .card { padding: 32px; }
+        .split .card h3 { font-size: 24px; }
+        .check-list { margin: 18px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .check-list li { display: flex; gap: 10px; font-size: 16px; line-height: 1.5; color: var(--body); }
+        .check-list svg { flex-shrink: 0; margin-top: 3px; color: var(--secondary-ink); }
+
+        /* FAQ */
+        .faq { margin-top: 40px; display: flex; flex-direction: column; gap: 8px; max-width: 820px; }
+        .faq details { background: var(--white); border-radius: var(--radius-lg); padding: 0 24px; }
+        .faq summary { cursor: pointer; list-style: none; padding: 20px 0; font-size: 18px; font-weight: 600; display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+        .faq summary::-webkit-details-marker { display: none; }
+        .faq summary::after { content: '+'; font-size: 24px; font-weight: 500; color: var(--secondary-ink); }
+        .faq details[open] summary::after { content: '−'; }
+        .faq details p { padding: 0 0 22px; font-size: 16px; line-height: 1.6; color: var(--muted); }
+
+        /* Final CTA + footer */
+        .cta { border-radius: var(--radius-sheet); background: var(--primary); color: var(--on-primary); padding: 56px 28px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+        .cta h2 { font-size: clamp(30px, 4vw, 44px); letter-spacing: -1.2px; line-height: 1.1; max-width: 720px; }
+        .cta p { font-size: 18px; line-height: 1.55; color: rgba(255, 255, 255, .8); max-width: 600px; }
+        .cta .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 8px; }
+        .cta { text-align: left; align-items: stretch; display: grid; gap: 32px; padding: 40px 24px; }
+        @media (min-width: 900px) { .cta { grid-template-columns: 1fr 1.1fr; padding: 56px; align-items: center; } }
+        .cta-intro { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+        .contact-form { display: grid; gap: 14px; grid-template-columns: 1fr; }
+        @media (min-width: 560px) { .contact-form { grid-template-columns: 1fr 1fr; } .contact-form .full { grid-column: 1 / -1; } }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field label { font-size: 14px; font-weight: 600; }
+        .field .optional { font-weight: 400; opacity: .7; }
+        .field input, .field textarea {
+            width: 100%; border: 0; border-radius: 16px; padding: 14px 16px;
+            background: var(--white); color: var(--text); font: 400 16px var(--font);
         }
-        .screenshot-card {
-            background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-            border: 1px solid rgba(255,255,255,0.08);
-        }
+        .field textarea { resize: vertical; min-height: 110px; }
+        .field input:focus-visible, .field textarea:focus-visible { outline: 3px solid var(--s40); outline-offset: 2px; }
+        .field input[aria-invalid="true"] { box-shadow: inset 0 0 0 2px var(--secondary); }
+        .honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+        .form-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+        .form-footer .btn:disabled { opacity: .6; cursor: wait; transform: none; }
+        .form-legal { margin: 0; font-size: 13px; line-height: 1.5; color: rgba(255, 255, 255, .7); }
+        .form-status { font-size: 15px; line-height: 1.5; color: rgba(255, 255, 255, .85); }
+        footer { padding: 48px 0 40px; }
+        footer .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; }
+        footer nav { display: flex; flex-wrap: wrap; gap: 20px; font-size: 15px; color: var(--muted); }
+        footer nav a { text-decoration: none; }
+        footer nav a:hover { color: var(--text); }
+        footer .legal { margin-top: 24px; font-size: 14px; color: var(--muted); }
+
+        /* ---------- Phone mockups: app screens at 390×844, scaled ---------- */
+        .phone { --s: .8; width: calc(390px * var(--s) + 16px); height: calc(844px * var(--s) + 16px); padding: 8px; border-radius: calc(48px * var(--s) + 8px); background: #0B0F1A; box-shadow: 0 30px 60px -20px rgba(0, 23, 51, .45); flex-shrink: 0; }
+        .phone.lg { --s: .86; }
+        .phone .viewport { width: calc(390px * var(--s)); height: calc(844px * var(--s)); border-radius: calc(48px * var(--s)); overflow: hidden; position: relative; }
+        .screen { width: 390px; height: 844px; transform: scale(var(--s)); transform-origin: top left; position: relative; overflow: hidden; background: var(--p06); color: var(--text); font-family: var(--font); font-size: 14px; }
+        .screen.dark { background: var(--primary); color: var(--on-primary); }
+        @media (max-width: 400px) { .phone, .phone.lg { --s: .72; } }
+
+        .screen .top { padding: 58px 20px 0; }
+        .screen .title { font-size: 30px; font-weight: 700; letter-spacing: -.8px; }
+        .screen .muted { color: var(--muted); }
+        .screen .sec { margin: 22px 20px 10px; display: flex; align-items: baseline; justify-content: space-between; }
+        .screen .sec b { font-size: 18px; }
+        .screen .white { background: var(--white); }
+        .screen .row { display: flex; align-items: center; gap: 12px; }
+        .screen .grow { flex-grow: 1; min-width: 0; }
+        .screen .col { display: flex; flex-direction: column; }
+        .screen .chip-pill { font-size: 13px; font-weight: 600; padding: 5px 11px; border-radius: 999px; }
+        .screen .badge { height: 22px; min-width: 22px; padding: 0 4px; border-radius: 11px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; white-space: nowrap; }
+        .screen .handle { width: 40px; height: 5px; border-radius: 3px; background: var(--handle); align-self: center; }
+        .t-bronze { background: #F8E7D8; color: #8A4B1C; }
+        .t-silver { background: #ECEEF1; color: #4B5563; }
+        .t-gold { background: #FDF1C7; color: #8A6100; }
+        .t-platinum { background: #DDF3F4; color: #1D6A70; }
+        .t-diamond { background: #EEE5FF; color: #5B2DBF; }
+        .t-streak { background: var(--streak-bg); color: var(--streak-fg); }
+
+        .tabbar { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); display: flex; gap: 4px; padding: 6px; border-radius: 999px; background: var(--primary); box-shadow: var(--shadow-floating); }
+        .tabbar span { width: 52px; height: 52px; border-radius: 26px; color: var(--on-primary); display: flex; align-items: center; justify-content: center; }
+        .tabbar span.on { background: var(--secondary); color: var(--on-secondary); }
+        .tabbar svg { width: 22px; height: 22px; }
+
+        .stack { position: relative; margin: 0 16px; }
+        .stack .under { position: absolute; border-radius: 24px; }
+        .sheet { position: absolute; left: 8px; right: 8px; bottom: 8px; border-radius: 32px; background: var(--white); color: var(--text); padding: 10px 20px 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 -10px 30px rgba(0, 23, 51, .16); }
+        .modal-page { position: absolute; left: 0; right: 0; top: 56px; bottom: 0; border-radius: 28px 28px 0 0; background: var(--p06); color: var(--text); padding: 10px 20px 0; display: flex; flex-direction: column; gap: 14px; }
+        .modal-peek { position: absolute; left: 20px; right: 20px; top: 44px; height: 60px; border-radius: 28px 28px 0 0; background: var(--p20); opacity: .5; }
     </style>
 </head>
-<body class="bg-white font-sans text-slate-800 antialiased">
-    <header class="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur-lg">
-        <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-            <a href="#" class="flex items-center gap-2.5">
-                <div class="relative h-9 w-9">
-                    <div class="gradient-ring absolute inset-0 rounded-xl"></div>
-                    <div class="absolute inset-[2px] flex items-center justify-center rounded-[10px] bg-white text-lg font-black text-slate-900">R</div>
-                </div>
-                <span class="text-lg font-bold tracking-tight">Riddono</span>
-            </a>
-            <nav class="hidden items-center gap-8 text-sm font-medium text-slate-500 md:flex">
-                <a href="#features" class="transition hover:text-slate-900">Fonctionnalites</a>
-                <a href="#how-it-works" class="transition hover:text-slate-900">Comment ca marche</a>
-                <a href="#screenshots" class="transition hover:text-slate-900">Apercu</a>
-                <a href="#pricing" class="transition hover:text-slate-900">Tarifs</a>
-            </nav>
-            <div class="flex items-center gap-3">
-                <a href="#" class="hidden text-sm font-medium text-slate-600 transition hover:text-slate-900 md:inline">Se connecter</a>
-                <a href="#pricing" class="rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700">
-                    Commencer
+<body>
+    <!-- Icon sprite: same glyphs as the app's tab bar (ui/components/Icon.tsx). -->
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+        <defs>
+            <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
+            <symbol id="i-ticket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4z"/></symbol>
+            <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4h12l-2 4 2 4H5"/></symbol>
+            <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
+            <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H5v1a3 3 0 0 0 3 3M16 6h3v1a3 3 0 0 1-3 3M12 13v4M8 20h8"/></symbol>
+            <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+            <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+            <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></symbol>
+            <symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+            <symbol id="i-ball" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m12 7 4 3-1.5 4.5h-5L8 10zM12 3v4M21 10l-5 0M3 10h5M7 20l2.5-5.5M17 20l-2.5-5.5"/></symbol>
+            <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+            <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17 19 7"/></symbol>
+            <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+            <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+        </defs>
+    </svg>
+
+    <header class="site-header">
+        <div class="container">
+            <div class="bar">
+                <a href="#" class="brand" aria-label="Betty, accueil">
+                    <!-- TODO: replace with the Betty logo and logotype -->
+                    <span class="logo-placeholder" aria-hidden="true">Logo</span>
+                    <span class="logotype-placeholder">Betty</span>
                 </a>
+                <nav aria-label="Navigation principale">
+                    <a href="#fonctionnalites">Fonctionnalités</a>
+                    <a href="#comment-ca-marche">Comment ça marche</a>
+                    <a href="#apercu">Aperçu</a>
+                    <a href="#faq">FAQ</a>
+                    <a href="#contact">Contact</a>
+                </nav>
+                <a href="#contact" class="btn btn-secondary btn-sm">Nous contacter</a>
             </div>
         </div>
     </header>
-    <section class="hero-glow relative overflow-hidden pb-16 pt-20 md:pb-24 md:pt-28">
-        <div class="mx-auto max-w-6xl px-6 text-center">
-            <div class="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-1.5 text-xs font-semibold text-indigo-700">
-                <span class="h-1.5 w-1.5 rounded-full bg-indigo-500"></span>
-                Nouvelle facon d'engager vos equipes
-            </div>
-            <h1 class="mx-auto mt-6 max-w-3xl text-4xl font-extrabold leading-[1.1] tracking-tight text-slate-900 md:text-6xl">
-                Pariez entre collegues,
-                <span class="bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 bg-clip-text text-transparent">donnez pour de vrai.</span>
-            </h1>
-            <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-500">
-                Riddono transforme vos pronostics d'equipe en dons concrets pour des associations. Lancez des campagnes, faites monter les encheres et laissez vos collaborateurs choisir ou va l'argent.
-            </p>
-            <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-                <a href="#pricing" class="inline-flex items-center gap-2 rounded-full bg-indigo-600 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition hover:bg-indigo-700 hover:shadow-indigo-500/40">
-                    Demarrer gratuitement
-                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M7.05 4.05a1 1 0 011.41 0l5.3 5.3a1 1 0 010 1.4l-5.3 5.3a1 1 0 11-1.41-1.4L11.64 10 7.05 5.46a1 1 0 010-1.41z"/></svg>
-                </a>
-                <a href="#how-it-works" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-7 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
-                    Voir comment ca marche
-                </a>
-            </div>
-            <div class="mt-6 flex items-center justify-center gap-6 text-xs text-slate-400">
-                <span class="flex items-center gap-1.5">
-                    <svg class="h-4 w-4 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                    Gratuit jusqu'a 25 joueurs
-                </span>
-                <span class="flex items-center gap-1.5">
-                    <svg class="h-4 w-4 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                    Sans carte bancaire
-                </span>
-                <span class="flex items-center gap-1.5">
-                    <svg class="h-4 w-4 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                    Pret en 5 minutes
-                </span>
-            </div>
-        </div>
-        <div class="mx-auto mt-16 max-w-5xl px-6">
-            <div class="screenshot app-shadow overflow-hidden rounded-2xl">
-                <div class="flex items-center gap-2 border-b border-white/5 bg-slate-900 px-4 py-3">
-                    <div class="flex gap-1.5">
-                        <div class="h-3 w-3 rounded-full bg-red-500/70"></div>
-                        <div class="h-3 w-3 rounded-full bg-amber-500/70"></div>
-                        <div class="h-3 w-3 rounded-full bg-emerald-500/70"></div>
-                    </div>
-                    <div class="mx-auto rounded-md bg-slate-800 px-16 py-1 text-xs text-slate-400">app.riddono.com</div>
-                </div>
-                <div class="bg-slate-950 p-6 md:p-8">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="relative h-8 w-8">
-                                <div class="gradient-ring absolute inset-0 rounded-lg"></div>
-                                <div class="absolute inset-[2px] flex items-center justify-center rounded-[6px] bg-slate-950 text-sm font-black text-white">R</div>
-                            </div>
-                            <div>
-                                <div class="text-xs font-semibold text-white">Riddono</div>
-                                <div class="text-[10px] uppercase tracking-widest text-slate-500">Acme Corp</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-1 rounded-full border border-white/5 bg-white/5 p-1 text-[11px]">
-                            <span class="rounded-full bg-white/10 px-3 py-1 font-medium text-white">Accueil</span>
-                            <span class="px-3 py-1 text-slate-400">Campagnes</span>
-                            <span class="px-3 py-1 text-slate-400">Paris</span>
-                            <span class="px-3 py-1 text-slate-400">Associations</span>
-                            <span class="px-3 py-1 text-slate-400">Classement</span>
-                        </div>
-                        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-[10px] font-bold text-white">ML</div>
-                    </div>
-                    <div class="mt-6 grid grid-cols-4 gap-3">
-                        <div class="screenshot-card rounded-xl p-4">
-                            <div class="text-[10px] uppercase tracking-widest text-slate-400">Campagnes actives</div>
-                            <div class="mt-1 text-2xl font-bold text-white">3</div>
-                            <div class="mt-0.5 text-[10px] text-slate-500">Chez Acme Corp</div>
-                        </div>
-                        <div class="screenshot-card rounded-xl p-4">
-                            <div class="text-[10px] uppercase tracking-widest text-slate-400">Paris gagnes</div>
-                            <div class="mt-1 text-2xl font-bold text-white">12</div>
-                            <div class="mt-1 text-xs font-semibold text-emerald-400">+2,400 pts</div>
-                        </div>
-                        <div class="screenshot-card rounded-xl p-4">
-                            <div class="text-[10px] uppercase tracking-widest text-slate-400">Paris en attente</div>
-                            <div class="mt-1 text-2xl font-bold text-white">5</div>
-                            <div class="mt-0.5 text-[10px] text-slate-500">En attente de resolution</div>
-                        </div>
-                        <div class="screenshot-card rounded-xl p-4">
-                            <div class="text-[10px] uppercase tracking-widest text-slate-400">Impact caritatif</div>
-                            <div class="mt-1 text-2xl font-bold text-white">8,350</div>
-                            <div class="mt-0.5 text-[10px] text-slate-500">Points donnes aux associations</div>
-                        </div>
-                    </div>
-                    <div class="mt-4 grid grid-cols-3 gap-3">
-                        <div class="screenshot-card col-span-2 rounded-xl p-4">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-semibold text-white">Campagnes a la une</span>
-                                <span class="text-[10px] text-slate-500">Tout voir</span>
-                            </div>
-                            <div class="mt-3 space-y-2.5">
-                                <div class="flex items-center justify-between rounded-lg bg-white/[0.03] p-2.5">
-                                    <div>
-                                        <div class="text-[11px] font-medium text-white">Coupe du monde 2026</div>
-                                        <div class="text-[10px] text-slate-500">Se termine le Jul 19 &middot; 50,000 pts</div>
-                                    </div>
-                                    <span class="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2 py-0.5 text-[9px] uppercase text-emerald-300">Active</span>
-                                </div>
-                                <div class="flex items-center justify-between rounded-lg bg-white/[0.03] p-2.5">
-                                    <div>
-                                        <div class="text-[11px] font-medium text-white">Pronostics Trimestre Q3</div>
-                                        <div class="text-[10px] text-slate-500">Se termine le Sep 30 &middot; 25,000 pts</div>
-                                    </div>
-                                    <span class="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2 py-0.5 text-[9px] uppercase text-emerald-300">Active</span>
-                                </div>
-                                <div class="flex items-center justify-between rounded-lg bg-white/[0.03] p-2.5">
-                                    <div>
-                                        <div class="text-[11px] font-medium text-white">Roland-Garros 2026</div>
-                                        <div class="text-[10px] text-slate-500">Se termine le Jun 8 &middot; 15,000 pts</div>
-                                    </div>
-                                    <span class="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2 py-0.5 text-[9px] uppercase text-emerald-300">Active</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="screenshot-card rounded-xl p-4">
-                            <div class="text-xs font-semibold text-white">Solde de points</div>
-                            <div class="mt-2 text-3xl font-bold text-white">14,720</div>
-                            <div class="mt-2 h-1.5 overflow-hidden rounded-full bg-white/5">
-                                <div class="h-full w-3/4 rounded-full bg-gradient-to-r from-cyan-400 to-indigo-400"></div>
-                            </div>
-                            <div class="mt-1.5 text-[10px] text-slate-500">Sur 3 campagnes actives</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="border-y border-slate-100 bg-slate-50 py-10">
-        <div class="mx-auto max-w-6xl px-6 text-center">
-            <p class="text-xs font-semibold uppercase tracking-widest text-slate-400">Ils font confiance a Riddono</p>
-            <div class="mt-6 flex flex-wrap items-center justify-center gap-x-12 gap-y-4 text-lg font-bold text-slate-300">
-                <span>Acme Corp</span>
-                <span>TechVision</span>
-                <span>GreenLeaf</span>
-                <span>UrbanHub</span>
-                <span>DataFlow</span>
-                <span>NovaTech</span>
-            </div>
-        </div>
-    </section>
-    <section id="features" class="py-20 md:py-28">
-        <div class="mx-auto max-w-6xl px-6">
-            <div class="text-center">
-                <div class="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-1.5 text-xs font-semibold text-indigo-700">
-                    Fonctionnalites
-                </div>
-                <h2 class="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
-                    Tout ce qu'il faut pour engager vos equipes
-                </h2>
-                <p class="mx-auto mt-4 max-w-2xl text-base text-slate-500">
-                    Des campagnes de paris aux dons caritatifs, Riddono offre une plateforme complete pour renforcer la cohesion et l'impact social de votre entreprise.
-                </p>
-            </div>
-            <div class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <div class="feature-card rounded-2xl border border-slate-100 bg-white p-7 transition">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-2xl">
-                        <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0016.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.04 6.04 0 01-2.021 1.07M14.25 15.75a17.876 17.876 0 01-2.25.15c-.764 0-1.517-.05-2.25-.15"/></svg>
-                    </div>
-                    <h3 class="mt-5 text-base font-bold text-slate-900">Campagnes de paris</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-slate-500">
-                        Creez des campagnes limitees dans le temps avec une cagnotte en euros. Vos equipes parient sur des pronostics sportifs, business ou fun.
-                    </p>
-                </div>
-                <div class="feature-card rounded-2xl border border-slate-100 bg-white p-7 transition">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50 text-2xl">
-                        <svg class="h-6 w-6 text-violet-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"/></svg>
-                    </div>
-                    <h3 class="mt-5 text-base font-bold text-slate-900">Classement en temps reel</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-slate-500">
-                        Un leaderboard par campagne et un classement global pour pimenter la competition entre collegues et motiver la participation.
-                    </p>
-                </div>
-                <div class="feature-card rounded-2xl border border-slate-100 bg-white p-7 transition">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-fuchsia-50 text-2xl">
-                        <svg class="h-6 w-6 text-fuchsia-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
-                    </div>
-                    <h3 class="mt-5 text-base font-bold text-slate-900">Dons aux associations</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-slate-500">
-                        A la fin de chaque campagne, les joueurs votent pour redistribuer la cagnotte aux associations de leur choix. Impact reel, choix collectif.
-                    </p>
-                </div>
-                <div class="feature-card rounded-2xl border border-slate-100 bg-white p-7 transition">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-50 text-2xl">
-                        <svg class="h-6 w-6 text-cyan-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    </div>
-                    <h3 class="mt-5 text-base font-bold text-slate-900">Modificateurs de paris</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-slate-500">
-                        Normal, Boost ou Sans-Risque : chaque joueur adapte sa strategie avec des multiplicateurs qui changent les gains et les pertes.
-                    </p>
-                </div>
-                <div class="feature-card rounded-2xl border border-slate-100 bg-white p-7 transition">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-2xl">
-                        <svg class="h-6 w-6 text-amber-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
-                    </div>
-                    <h3 class="mt-5 text-base font-bold text-slate-900">Multi-entreprises</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-slate-500">
-                        Chaque entreprise a son espace prive avec ses campagnes, ses associations et son classement. Les campagnes publiques rassemblent tout le monde.
-                    </p>
-                </div>
-                <div class="feature-card rounded-2xl border border-slate-100 bg-white p-7 transition">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-2xl">
-                        <svg class="h-6 w-6 text-emerald-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
-                    </div>
-                    <h3 class="mt-5 text-base font-bold text-slate-900">Panneau d'administration</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-slate-500">
-                        Gerez campagnes, paris et associations depuis un espace admin dedie. Resolvez les paris, ouvrez les votes et suivez les resultats.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section id="how-it-works" class="border-y border-slate-100 bg-slate-50 py-20 md:py-28">
-        <div class="mx-auto max-w-6xl px-6">
-            <div class="text-center">
-                <div class="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-1.5 text-xs font-semibold text-indigo-700">
-                    Comment ca marche
-                </div>
-                <h2 class="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
-                    Trois etapes, un impact reel
-                </h2>
-            </div>
-            <div class="mt-14 grid gap-8 md:grid-cols-3">
-                <div class="relative rounded-2xl bg-white p-8 shadow-sm">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white">1</div>
-                    <h3 class="mt-5 text-lg font-bold text-slate-900">Lancez une campagne</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-slate-500">
-                        Definissez une cagnotte en euros, une periode de paris et ajoutez des questions de pronostics. Vos equipes recoivent un solde de points initial.
-                    </p>
-                </div>
-                <div class="relative rounded-2xl bg-white p-8 shadow-sm">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-violet-600 text-sm font-bold text-white">2</div>
-                    <h3 class="mt-5 text-lg font-bold text-slate-900">Pariez et grimpez</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-slate-500">
-                        Les joueurs placent leurs pronostics avec differents modificateurs. Les gains s'accumulent, le classement evolue en temps reel.
-                    </p>
-                </div>
-                <div class="relative rounded-2xl bg-white p-8 shadow-sm">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-fuchsia-600 text-sm font-bold text-white">3</div>
-                    <h3 class="mt-5 text-lg font-bold text-slate-900">Votez et donnez</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-slate-500">
-                        La phase de paris terminee, les joueurs allouent leurs points aux associations. La cagnotte est redistribuee proportionnellement. De vrais euros, un vrai impact.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section id="screenshots" class="py-20 md:py-28">
-        <div class="mx-auto max-w-6xl px-6">
-            <div class="text-center">
-                <div class="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-1.5 text-xs font-semibold text-indigo-700">
-                    Apercu
-                </div>
-                <h2 class="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
-                    Decouvrez l'interface
-                </h2>
-                <p class="mx-auto mt-4 max-w-xl text-base text-slate-500">
-                    Un design soigne, une experience fluide. Voici un apercu des ecrans principaux.
-                </p>
-            </div>
-            <div class="mt-14 grid gap-8 lg:grid-cols-2">
+
+    <main>
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container hero-grid">
                 <div>
-                    <div class="screenshot app-shadow overflow-hidden rounded-xl">
-                        <div class="flex items-center gap-2 border-b border-white/5 bg-slate-900 px-3 py-2">
-                            <div class="flex gap-1.5"><div class="h-2.5 w-2.5 rounded-full bg-red-500/70"></div><div class="h-2.5 w-2.5 rounded-full bg-amber-500/70"></div><div class="h-2.5 w-2.5 rounded-full bg-emerald-500/70"></div></div>
-                            <div class="mx-auto rounded bg-slate-800 px-10 py-0.5 text-[10px] text-slate-400">Paris de la campagne</div>
-                        </div>
-                        <div class="bg-slate-950 p-5">
-                            <h3 class="text-sm font-bold text-white">Coupe du monde 2026</h3>
-                            <p class="text-[10px] text-slate-500 mt-1">3 paris ouverts &middot; Cagnotte 50,000 pts</p>
-                            <div class="mt-4 space-y-2.5">
-                                <div class="screenshot-card rounded-lg p-3">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <div class="text-[11px] font-medium text-white">Qui remportera la finale ?</div>
-                                            <div class="text-[10px] text-slate-500 mt-0.5">Ferme le 19 Jul &middot; 3 propositions</div>
-                                        </div>
-                                        <span class="rounded-full bg-emerald-500/10 border border-emerald-400/30 px-2 py-0.5 text-[9px] text-emerald-300 uppercase">Ouvert</span>
+                    <span class="pill" style="background: var(--s12); color: var(--secondary-ink)">
+                        <svg width="16" height="16" aria-hidden="true"><use href="#i-heart"/></svg>
+                        Nouveau nom, même esprit : B2Bet devient Betty
+                    </span>
+                    <h1 style="margin-top: 22px">Les paris entre collègues, <span class="accent">pour la bonne cause.</span></h1>
+                    <p class="lead">
+                        Betty est l’app où vos équipes parient des points sur les matchs du week-end et la vie de l’entreprise.
+                        Ensuite, elles votent avec ces points pour décider à quelles associations l’entreprise fait ses dons.
+                    </p>
+                    <div class="actions">
+                        <a href="#contact" class="btn btn-secondary">
+                            Lancer Betty dans mon entreprise
+                            <svg width="18" height="18" aria-hidden="true"><use href="#i-arrow"/></svg>
+                        </a>
+                        <a href="#comment-ca-marche" class="btn btn-ghost">Comment ça marche</a>
+                    </div>
+                    <div class="facts">
+                        <span class="pill">Des points, jamais d’argent</span>
+                        <span class="pill">Mises secrètes</span>
+                        <span class="pill">iOS et Android</span>
+                    </div>
+                </div>
+
+                <div class="hero-visual" aria-label="Captures de l’application Betty">
+                    <!-- Pari + feuille de mise -->
+                    <div class="phone phone-back" aria-hidden="true">
+                        <div class="viewport">
+                            <div class="screen dark">
+                                <div class="modal-peek"></div>
+                                <div class="modal-page">
+                                    <div class="row" style="justify-content: space-between">
+                                        <span style="width: 44px; height: 44px; margin-left: -8px; display: flex; align-items: center; justify-content: center"><svg width="22" height="22"><use href="#i-chevron"/></svg></span>
+                                        <span class="chip-pill" style="background: var(--s12); color: var(--secondary-ink)">Clôture sam. 20:45</span>
                                     </div>
-                                    <div class="mt-2 flex gap-1.5">
-                                        <span class="rounded-md bg-indigo-500/10 border border-indigo-400/20 px-2 py-0.5 text-[9px] text-indigo-300">France</span>
-                                        <span class="rounded-md bg-white/5 border border-white/10 px-2 py-0.5 text-[9px] text-slate-400">Bresil</span>
-                                        <span class="rounded-md bg-white/5 border border-white/10 px-2 py-0.5 text-[9px] text-slate-400">Argentine</span>
+                                    <div class="col" style="gap: 4px">
+                                        <span class="muted">Ligue 1 · Journée 11</span>
+                                        <span style="font-size: 28px; font-weight: 700; letter-spacing: -.8px; line-height: 1.15">PSG – OM : qui l’emporte ?</span>
                                     </div>
-                                    <div class="mt-2 flex items-center justify-between text-[10px]">
-                                        <span class="text-indigo-300 font-medium">Votre pari : France &middot; 500 pts &middot; Boost x2</span>
-                                        <span class="text-amber-300">En attente</span>
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px">
+                                        <div class="col" style="height: 104px; border-radius: 22px; background: var(--primary); color: var(--on-primary); align-items: center; justify-content: center; gap: 6px"><span style="width: 40px; height: 40px; border-radius: 20px; background: var(--secondary); display: flex; align-items: center; justify-content: center; font-weight: 700">PSG</span><span style="font-weight: 600">Victoire</span></div>
+                                        <div class="col white" style="height: 104px; border-radius: 22px; align-items: center; justify-content: center; gap: 6px"><span style="width: 40px; height: 40px; border-radius: 20px; background: var(--p06); display: flex; align-items: center; justify-content: center; font-weight: 700">N</span><span style="font-weight: 600">Match nul</span></div>
+                                        <div class="col white" style="height: 104px; border-radius: 22px; align-items: center; justify-content: center; gap: 6px"><span style="width: 40px; height: 40px; border-radius: 20px; background: var(--p06); display: flex; align-items: center; justify-content: center; font-weight: 700">OM</span><span style="font-weight: 600">Victoire</span></div>
                                     </div>
                                 </div>
-                                <div class="screenshot-card rounded-lg p-3">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <div class="text-[11px] font-medium text-white">Meilleur buteur du tournoi ?</div>
-                                            <div class="text-[10px] text-slate-500 mt-0.5">Ferme le 19 Jul &middot; 4 propositions</div>
-                                        </div>
-                                        <span class="rounded-full bg-emerald-500/10 border border-emerald-400/30 px-2 py-0.5 text-[9px] text-emerald-300 uppercase">Ouvert</span>
+                                <div style="position: absolute; inset: 0; background: rgba(0, 10, 25, .25)"></div>
+                                <div class="sheet">
+                                    <span class="handle"></span>
+                                    <div class="col"><span class="muted" style="font-size: 13px">Victoire du PSG</span><span style="font-size: 30px; font-weight: 700; letter-spacing: -1px">100 pts</span></div>
+                                    <div class="row">
+                                        <span style="width: 44px; height: 44px; border-radius: 22px; background: var(--p06); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600">−</span>
+                                        <div class="grow" style="height: 10px; border-radius: 5px; background: var(--p12); position: relative"><div style="position: absolute; left: 0; top: 0; bottom: 0; width: 40%; border-radius: 5px; background: var(--primary)"></div><div style="position: absolute; top: -9px; left: 40%; margin-left: -14px; width: 28px; height: 28px; border-radius: 14px; background: var(--white); border: 3px solid var(--primary)"></div></div>
+                                        <span style="width: 44px; height: 44px; border-radius: 22px; background: var(--p06); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600">+</span>
                                     </div>
-                                </div>
-                                <div class="screenshot-card rounded-lg p-3">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <div class="text-[11px] font-medium text-white">Nombre de buts en finale ?</div>
-                                            <div class="text-[10px] text-slate-500 mt-0.5">Ferme le 13 Jul &middot; Resolu</div>
-                                        </div>
-                                        <span class="rounded-full bg-slate-500/10 border border-slate-400/30 px-2 py-0.5 text-[9px] text-slate-400 uppercase">Resolu</span>
+                                    <div class="row" style="gap: 8px">
+                                        <span style="flex: 1; height: 44px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--p12); display: flex; align-items: center; justify-content: center; font-weight: 600">50</span>
+                                        <span style="flex: 1; height: 44px; border-radius: 999px; background: var(--primary); color: var(--on-primary); display: flex; align-items: center; justify-content: center; font-weight: 600">100</span>
+                                        <span style="flex: 1; height: 44px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--p12); display: flex; align-items: center; justify-content: center; font-weight: 600">200</span>
+                                        <span style="flex: 1; height: 44px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--p12); display: flex; align-items: center; justify-content: center; font-weight: 600">Tout</span>
                                     </div>
-                                    <div class="mt-2 flex items-center justify-between text-[10px]">
-                                        <span class="text-emerald-300 font-medium">Vous avez gagne +800 pts</span>
-                                        <span class="text-emerald-400">Gagne</span>
+                                    <div class="col" style="padding: 12px 16px; border-radius: 20px; background: var(--p06); gap: 6px; font-size: 13px; line-height: 1.4">
+                                        <span><b>Si vous gagnez :</b> votre mise (100 pts), plus une part des mises perdantes de votre entreprise, révélée à la résolution.</span>
+                                        <span class="muted"><b>Si vous perdez :</b> −100 pts</span>
                                     </div>
+                                    <span style="height: 56px; border-radius: 999px; background: var(--primary); color: var(--on-primary); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700">Placer la mise</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <p class="mt-4 text-center text-sm font-medium text-slate-600">Paris et pronostics</p>
-                </div>
-                <div>
-                    <div class="screenshot app-shadow overflow-hidden rounded-xl">
-                        <div class="flex items-center gap-2 border-b border-white/5 bg-slate-900 px-3 py-2">
-                            <div class="flex gap-1.5"><div class="h-2.5 w-2.5 rounded-full bg-red-500/70"></div><div class="h-2.5 w-2.5 rounded-full bg-amber-500/70"></div><div class="h-2.5 w-2.5 rounded-full bg-emerald-500/70"></div></div>
-                            <div class="mx-auto rounded bg-slate-800 px-10 py-0.5 text-[10px] text-slate-400">Classement</div>
-                        </div>
-                        <div class="bg-slate-950 p-5">
-                            <div class="flex items-center gap-2 mb-4">
-                                <div class="text-lg">&#x1F3C6;</div>
-                                <div>
-                                    <h3 class="text-sm font-bold text-white">Classement general</h3>
-                                    <p class="text-[10px] text-slate-500">Total des points sur toutes les campagnes</p>
+
+                    <!-- Accueil -->
+                    <div class="phone lg phone-front" role="img" aria-label="Écran d’accueil de Betty : solde de points, pari à jouer, vote caritatif ouvert et progression au classement">
+                        <div class="viewport">
+                            <div class="screen" aria-hidden="true">
+                                <div class="top row">
+                                    <div class="grow col"><span class="muted">Mercredi 29 octobre</span><span style="font-size: 26px; font-weight: 700; letter-spacing: -.5px">Bonjour Alex</span></div>
+                                    <span style="width: 44px; height: 44px; border-radius: 22px; background: var(--secondary); color: var(--on-secondary); display: flex; align-items: center; justify-content: center; font-weight: 700">AD</span>
                                 </div>
-                            </div>
-                            <div class="screenshot-card rounded-xl overflow-hidden">
-                                <table class="w-full text-[11px]">
-                                    <thead>
-                                        <tr class="border-b border-white/5 bg-white/5 text-[9px] uppercase tracking-widest text-slate-400">
-                                            <th class="px-3 py-2 text-left w-8">#</th>
-                                            <th class="px-3 py-2 text-left">Joueur</th>
-                                            <th class="px-3 py-2 text-right">Points</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-white/5">
-                                        <tr>
-                                            <td class="px-3 py-2.5 text-amber-400 font-bold">1</td>
-                                            <td class="px-3 py-2.5"><div class="flex items-center gap-2"><div class="h-5 w-5 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-[8px] font-bold text-white flex items-center justify-center">SL</div><span class="text-white">Sophie Laurent</span></div></td>
-                                            <td class="px-3 py-2.5 text-right font-bold text-amber-400">18,240</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="px-3 py-2.5 text-slate-300 font-bold">2</td>
-                                            <td class="px-3 py-2.5"><div class="flex items-center gap-2"><div class="h-5 w-5 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-[8px] font-bold text-white flex items-center justify-center">ML</div><span class="text-white">Marc Lemoine</span></div></td>
-                                            <td class="px-3 py-2.5 text-right font-bold text-slate-100">14,720</td>
-                                        </tr>
-                                        <tr class="bg-indigo-500/10">
-                                            <td class="px-3 py-2.5 text-orange-400 font-bold">3</td>
-                                            <td class="px-3 py-2.5"><div class="flex items-center gap-2"><div class="h-5 w-5 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-[8px] font-bold text-white flex items-center justify-center">JD</div><span class="text-white font-semibold">Julie Dupont</span><span class="rounded-full bg-indigo-500/20 px-1.5 py-0.5 text-[8px] font-semibold text-indigo-300">Vous</span></div></td>
-                                            <td class="px-3 py-2.5 text-right font-bold text-indigo-300">12,580</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="px-3 py-2.5 text-slate-400">4</td>
-                                            <td class="px-3 py-2.5"><div class="flex items-center gap-2"><div class="h-5 w-5 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-[8px] font-bold text-white flex items-center justify-center">AB</div><span class="text-slate-200">Antoine Bernard</span></div></td>
-                                            <td class="px-3 py-2.5 text-right font-bold text-slate-100">11,050</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="px-3 py-2.5 text-slate-400">5</td>
-                                            <td class="px-3 py-2.5"><div class="flex items-center gap-2"><div class="h-5 w-5 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-[8px] font-bold text-white flex items-center justify-center">CM</div><span class="text-slate-200">Clara Martin</span></div></td>
-                                            <td class="px-3 py-2.5 text-right font-bold text-slate-100">9,870</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <div class="col" style="margin: 20px 16px 0; border-radius: 28px; background: var(--primary); color: var(--on-primary); padding: 22px; gap: 18px">
+                                    <div class="row" style="justify-content: space-between; align-items: flex-start">
+                                        <div class="col" style="gap: 2px"><span style="opacity: .8">Solde</span><span style="font-size: 40px; font-weight: 700; letter-spacing: -1.5px; line-height: 1.05">1 240 pts</span></div>
+                                        <span class="chip-pill" style="background: var(--secondary); color: var(--on-secondary)">4e</span>
+                                    </div>
+                                    <div class="row" style="gap: 22px">
+                                        <div class="col"><span style="opacity: .8">En jeu</span><b style="font-size: 16px">180</b></div>
+                                        <div class="col"><span style="opacity: .8">Bilan</span><b style="font-size: 16px">+320</b></div>
+                                        <div class="col" style="gap: 3px"><span style="opacity: .8">Badges</span>
+                                            <div class="row" style="gap: 3px"><span class="badge t-silver">🎖️</span><span class="badge t-bronze">🎲</span><span class="badge t-bronze">💰</span><span class="badge t-streak">🔥3</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="sec"><b>À jouer</b><span class="muted">1 / 4</span></div>
+                                <div class="stack" style="height: 176px">
+                                    <div class="under" style="left: 24px; right: 24px; top: 0; height: 150px; background: var(--p20)"></div>
+                                    <div class="under" style="left: 12px; right: 12px; top: 10px; height: 150px; background: var(--p12)"></div>
+                                    <div class="col white" style="position: absolute; left: 0; right: 0; top: 22px; height: 154px; border-radius: 24px; padding: 18px 20px; justify-content: space-between; box-shadow: var(--shadow-raised)">
+                                        <div class="col" style="gap: 4px"><span class="muted" style="font-size: 13px">Ligue 1 · Clôture sam. 20:45</span><span style="font-size: 20px; font-weight: 700; letter-spacing: -.3px">PSG – OM : qui l’emporte ?</span></div>
+                                        <div class="row" style="justify-content: space-between"><span class="muted" style="font-size: 13px">Glissez pour passer</span><span style="height: 40px; padding: 0 18px; border-radius: 999px; background: var(--secondary); color: var(--on-secondary); display: flex; align-items: center; font-size: 15px; font-weight: 600">Parier</span></div>
+                                    </div>
+                                </div>
+                                <div style="margin: 16px 16px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+                                    <div class="col white" style="border-radius: 24px; padding: 16px; height: 120px; justify-content: space-between">
+                                        <span class="icon-chip s" style="width: 36px; height: 36px; border-radius: 18px"><svg width="20" height="20"><use href="#i-heart"/></svg></span>
+                                        <div class="col"><b style="font-size: 16px">Vote ouvert</b><span class="muted" style="font-size: 13px">jusqu’au 15/11</span></div>
+                                    </div>
+                                    <div class="col white" style="border-radius: 24px; padding: 16px; height: 120px; justify-content: space-between">
+                                        <span class="icon-chip p" style="width: 36px; height: 36px; border-radius: 18px"><svg width="20" height="20"><use href="#i-trophy"/></svg></span>
+                                        <div class="col"><b style="font-size: 16px">Classement</b><span class="muted" style="font-size: 13px">Vous êtes 4e</span></div>
+                                    </div>
+                                </div>
+                                <div class="tabbar"><span class="on"><svg><use href="#i-home"/></svg></span><span><svg><use href="#i-ticket"/></svg></span><span><svg><use href="#i-flag"/></svg></span><span><svg><use href="#i-heart"/></svg></span><span><svg><use href="#i-trophy"/></svg></span></div>
                             </div>
                         </div>
                     </div>
-                    <p class="mt-4 text-center text-sm font-medium text-slate-600">Classement des joueurs</p>
                 </div>
-                <div>
-                    <div class="screenshot app-shadow overflow-hidden rounded-xl">
-                        <div class="flex items-center gap-2 border-b border-white/5 bg-slate-900 px-3 py-2">
-                            <div class="flex gap-1.5"><div class="h-2.5 w-2.5 rounded-full bg-red-500/70"></div><div class="h-2.5 w-2.5 rounded-full bg-amber-500/70"></div><div class="h-2.5 w-2.5 rounded-full bg-emerald-500/70"></div></div>
-                            <div class="mx-auto rounded bg-slate-800 px-10 py-0.5 text-[10px] text-slate-400">Associations</div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section id="fonctionnalites" class="block" style="padding-top: 24px">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow">Fonctionnalités</span>
+                    <h2>Tout ce qu’il faut pour faire jouer vos équipes</h2>
+                    <p>Des paris simples à placer depuis le téléphone, un classement qui donne envie de revenir, et une façon concrète de choisir ensemble les causes que l’entreprise soutient.</p>
+                </div>
+                <div class="features">
+                    <article class="card">
+                        <span class="icon-chip s"><svg width="24" height="24" aria-hidden="true"><use href="#i-ticket"/></svg></span>
+                        <h3>Des paris en deux gestes</h3>
+                        <p>Choisissez une réponse, réglez votre mise, validez. Les paris à jouer s’empilent sur l’accueil : on parie ou on glisse pour passer au suivant.</p>
+                    </article>
+                    <article class="card">
+                        <span class="icon-chip p"><svg width="24" height="24" aria-hidden="true"><use href="#i-ball"/></svg></span>
+                        <h3>Sport et vie de l’entreprise</h3>
+                        <p>Les matchs d’une compétition se synchronisent tout seuls dans une campagne. À côté, posez vos propres questions : objectifs du trimestre, tournoi de baby-foot, qui arrive en premier lundi…</p>
+                    </article>
+                    <article class="card">
+                        <span class="icon-chip s"><svg width="24" height="24" aria-hidden="true"><use href="#i-flag"/></svg></span>
+                        <h3>Campagnes à suivre</h3>
+                        <p>Une campagne regroupe les paris d’un même thème. Campagnes de l’entreprise, réservées à certains groupes, ou campagnes publiques proposées par Betty : chacun suit celles qui l’intéressent.</p>
+                    </article>
+                    <article class="card">
+                        <span class="icon-chip p"><svg width="24" height="24" aria-hidden="true"><use href="#i-trophy"/></svg></span>
+                        <h3>Classement, rangs et badges</h3>
+                        <p>Un podium par membre et par équipe. Les paris gagnés font monter de rang, de Bronze à Diamant, avec des titres pour les plus audacieux et des séries de victoires 🔥.</p>
+                    </article>
+                    <article class="card">
+                        <span class="icon-chip s"><svg width="24" height="24" aria-hidden="true"><use href="#i-heart"/></svg></span>
+                        <h3>Des dons votés par tous</h3>
+                        <p>L’entreprise ouvre un vote caritatif avec une dotation en euros. Chacun attribue ses points aux associations de son choix, sans les dépenser, et la dotation est répartie au prorata.</p>
+                    </article>
+                    <article class="card">
+                        <span class="icon-chip p"><svg width="24" height="24" aria-hidden="true"><use href="#i-bell"/></svg></span>
+                        <h3>Notifications utiles</h3>
+                        <p>Un pari s’ouvre, un résultat tombe, un vote commence : vos collègues sont prévenus sur leur téléphone, et chacun choisit ce qu’il veut recevoir.</p>
+                    </article>
+                    <article class="card">
+                        <span class="icon-chip s"><svg width="24" height="24" aria-hidden="true"><use href="#i-chat"/></svg></span>
+                        <h3>Annonces dans Slack</h3>
+                        <p>Nouveaux paris, résultats et votes s’affichent dans le canal de votre choix pour faire vivre le jeu là où l’équipe discute déjà.</p>
+                    </article>
+                    <article class="card">
+                        <span class="icon-chip p"><svg width="24" height="24" aria-hidden="true"><use href="#i-plug"/></svg></span>
+                        <h3>Des points branchés sur vos outils</h3>
+                        <p>Créditez des points à la main, à toute l’entreprise ou à un collaborateur, ou laissez vos propres systèmes le faire grâce au webhook de points.</p>
+                    </article>
+                    <article class="card feature-wide">
+                        <span class="icon-chip"><svg width="24" height="24" aria-hidden="true"><use href="#i-settings"/></svg></span>
+                        <div>
+                            <h3>L’administration tient dans la poche</h3>
+                            <p>Campagnes, paris à résoudre, membres et groupes, associations, votes caritatifs, points : tout se gère depuis l’app. Connexion avec le compte Google de l’entreprise, sans mot de passe à créer.</p>
                         </div>
-                        <div class="bg-slate-950 p-5">
-                            <h3 class="text-sm font-bold text-white">Votez pour vos associations</h3>
-                            <p class="text-[10px] text-slate-500 mt-1">Phase de vote ouverte &middot; Allouez vos points restants</p>
-                            <div class="mt-4 space-y-2.5">
-                                <div class="screenshot-card rounded-lg p-3">
-                                    <div class="flex items-center gap-3">
-                                        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400">
-                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12.75 3.03v.568c0 .334.148.65.405.864a11.04 11.04 0 012.649 2.952c.35.634-.074 1.395-.807 1.395H13.5a.75.75 0 00-.624.332l-1.2 1.8A.75.75 0 0012.3 12h2.45a.75.75 0 00.651-.378l.9-1.575a.75.75 0 01.651-.378h1.298a.75.75 0 00.665-.402l1.092-2.184A11.04 11.04 0 0021 3.749V3.5A1.5 1.5 0 0019.5 2h-7.278a.75.75 0 00-.472.168z"/></svg>
+                        <a href="#contact" class="btn btn-secondary btn-sm">Nous contacter</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- How it works -->
+        <section id="comment-ca-marche" class="block on-dark">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow">Comment ça marche</span>
+                    <h2>Des points pour jouer, des euros pour donner</h2>
+                    <p>Personne ne mise d’argent. Les collègues jouent avec des points, l’entreprise finance les dons, et ce sont les points qui décident où ils vont.</p>
+                </div>
+                <div class="steps">
+                    <article class="step">
+                        <span class="num">1</span>
+                        <span class="who">L’administrateur</span>
+                        <h3>Lance le jeu</h3>
+                        <p>Il invite les collègues, crée des campagnes ou active des campagnes publiques, et crédite des points pour démarrer.</p>
+                    </article>
+                    <article class="step">
+                        <span class="num">2</span>
+                        <span class="who">Les collègues</span>
+                        <h3>Parient et grimpent</h3>
+                        <p>Chacun mise ses points sur la réponse de son choix, en secret. À la résolution, les gagnants récupèrent leur mise et se partagent les mises perdantes de l’entreprise.</p>
+                    </article>
+                    <article class="step">
+                        <span class="num">3</span>
+                        <span class="who">Tout le monde</span>
+                        <h3>Vote pour les dons</h3>
+                        <p>L’entreprise ouvre un vote avec une dotation en euros. Les points attribués aux associations restent sur le solde, et la dotation est répartie au prorata des points reçus.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screens -->
+        <section id="apercu" class="block">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow">Aperçu</span>
+                    <h2>Des cartes empilées, tout s’ouvre en feuille</h2>
+                    <p>Une interface pensée pour le pouce : des cartes blanches posées sur les couleurs de votre entreprise, et des feuilles qui montent du bas pour miser ou voter.</p>
+                </div>
+                <p class="scroll-hint">Faites défiler les écrans →</p>
+
+                <div class="screens">
+                    <!-- Paris -->
+                    <figure>
+                        <div class="phone" role="img" aria-label="Écran Paris : paris ouverts du week-end et mises en cours">
+                            <div class="viewport">
+                                <div class="screen" aria-hidden="true">
+                                    <div class="top col" style="gap: 16px">
+                                        <div class="row" style="justify-content: space-between"><span class="title">Paris</span><span style="font-weight: 600; color: var(--primary-ink)">1 240 pts</span></div>
+                                        <div class="row white" style="gap: 0; padding: 4px; border-radius: 999px">
+                                            <span style="flex: 1; height: 38px; border-radius: 999px; background: var(--primary); color: var(--on-primary); display: flex; align-items: center; justify-content: center; font-weight: 600">Ouverts</span>
+                                            <span class="muted" style="flex: 1; text-align: center">En attente</span>
+                                            <span class="muted" style="flex: 1; text-align: center">Terminés</span>
                                         </div>
-                                        <div class="flex-1">
-                                            <div class="text-[11px] font-medium text-white">Les Restos du Coeur</div>
-                                            <div class="text-[10px] text-slate-500">Aide alimentaire et insertion</div>
-                                            <div class="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/5">
-                                                <div class="h-full w-2/5 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400"></div>
+                                        <div class="row" style="gap: 8px; font-size: 13px">
+                                            <span style="height: 34px; padding: 0 14px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--primary); display: flex; align-items: center; font-weight: 600">Toutes · 12</span>
+                                            <span class="white muted" style="height: 34px; padding: 0 14px; border-radius: 999px; display: flex; align-items: center">Ligue 1 · 8</span>
+                                            <span class="white muted" style="height: 34px; padding: 0 14px; border-radius: 999px; display: flex; align-items: center">Entreprise · 3</span>
+                                        </div>
+                                    </div>
+                                    <div class="col" style="padding: 18px 16px 0; gap: 10px">
+                                        <span class="muted" style="font-size: 13px; font-weight: 600; padding: 0 6px">Ce week-end</span>
+                                        <div class="col white" style="border-radius: 24px">
+                                            <div class="row" style="padding: 16px 18px; border-bottom: 1px solid var(--p06)">
+                                                <div class="col" style="width: 44px; height: 44px; border-radius: 14px; background: var(--s12); color: var(--secondary-ink); align-items: center; justify-content: center; font-size: 11px; font-weight: 700; line-height: 1.1"><span>SAM</span><span style="font-size: 13px">20:45</span></div>
+                                                <div class="grow col" style="gap: 2px"><span style="font-size: 16px; font-weight: 600">PSG – OM : qui l’emporte ?</span><span style="font-size: 13px; font-weight: 600; color: var(--secondary-ink)">À vous de jouer</span></div>
+                                            </div>
+                                            <div class="row" style="padding: 16px 18px">
+                                                <div class="col" style="width: 44px; height: 44px; border-radius: 14px; background: var(--p12); color: var(--primary-ink); align-items: center; justify-content: center; font-size: 11px; font-weight: 700; line-height: 1.1"><span>DIM</span><span style="font-size: 13px">17:00</span></div>
+                                                <div class="grow col" style="gap: 2px"><span style="font-size: 16px; font-weight: 600">Monaco – Rennes : qui l’emporte ?</span><span class="muted" style="font-size: 13px">Ligue 1 · J11</span></div>
                                             </div>
                                         </div>
-                                        <div class="text-right">
-                                            <div class="text-sm font-bold text-white">3,200</div>
-                                            <div class="text-[9px] text-slate-500">points</div>
+                                        <span class="muted" style="font-size: 13px; font-weight: 600; padding: 4px 6px 0">La semaine prochaine</span>
+                                        <div class="row white" style="border-radius: 24px; padding: 16px 18px">
+                                            <div class="col" style="width: 44px; height: 44px; border-radius: 14px; background: var(--p12); color: var(--primary-ink); align-items: center; justify-content: center; font-size: 11px; font-weight: 700; line-height: 1.1"><span>VEN</span><span style="font-size: 13px">07/11</span></div>
+                                            <div class="grow col" style="gap: 2px"><span style="font-size: 16px; font-weight: 600">Qui gagne le tournoi de baby-foot ?</span><span class="muted" style="font-size: 13px">Vie de l’entreprise</span></div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="screenshot-card rounded-lg p-3">
-                                    <div class="flex items-center gap-3">
-                                        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-fuchsia-500/10 text-fuchsia-400">
-                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg>
+                                    <div class="col white" style="position: absolute; left: 0; right: 0; bottom: 0; height: 196px; border-radius: 28px 28px 0 0; padding: 8px 20px 0; gap: 10px; box-shadow: 0 -8px 24px rgba(0, 23, 51, .10)">
+                                        <span class="handle"></span>
+                                        <div class="row" style="justify-content: space-between"><b style="font-size: 16px">Mes mises en cours</b><span class="chip-pill" style="background: var(--p12); color: var(--primary-ink)">2 · 180 pts</span></div>
+                                        <div class="row" style="gap: 8px; align-items: stretch; font-size: 13px; line-height: 1.3">
+                                            <span style="flex: 1; padding: 10px 12px; border-radius: 16px; background: var(--p06)"><b>Run du 9/11</b><br>+ de 60 · 120 pts</span>
+                                            <span style="flex: 1; padding: 10px 12px; border-radius: 16px; background: var(--p06)"><b>Nantes – Lille</b><br>Nul · 60 pts</span>
                                         </div>
-                                        <div class="flex-1">
-                                            <div class="text-[11px] font-medium text-white">Unicef France</div>
-                                            <div class="text-[10px] text-slate-500">Protection de l'enfance</div>
-                                            <div class="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/5">
-                                                <div class="h-full w-1/3 rounded-full bg-gradient-to-r from-fuchsia-400 to-violet-400"></div>
+                                    </div>
+                                    <div class="tabbar"><span><svg><use href="#i-home"/></svg></span><span class="on"><svg><use href="#i-ticket"/></svg></span><span><svg><use href="#i-flag"/></svg></span><span><svg><use href="#i-heart"/></svg></span><span><svg><use href="#i-trophy"/></svg></span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <figcaption><strong>Les paris</strong><span>Ouverts, en attente ou terminés, filtrés par campagne, avec vos mises en cours toujours sous la main.</span></figcaption>
+                    </figure>
+
+                    <!-- Pari terminé -->
+                    <figure>
+                        <div class="phone" role="img" aria-label="Pari terminé : pronostic gagnant et points crédités">
+                            <div class="viewport">
+                                <div class="screen dark" aria-hidden="true">
+                                    <div class="modal-peek"></div>
+                                    <div class="modal-page">
+                                        <div class="row" style="justify-content: space-between">
+                                            <span style="width: 44px; height: 44px; margin-left: -8px; display: flex; align-items: center; justify-content: center"><svg width="22" height="22"><use href="#i-chevron"/></svg></span>
+                                            <span class="chip-pill white" style="color: var(--body)">Résolu le 26/10</span>
+                                        </div>
+                                        <div class="col" style="gap: 4px"><span class="muted">Ligue 1 · Journée 10</span><span style="font-size: 26px; font-weight: 700; letter-spacing: -.8px; line-height: 1.15">Lyon – Lens : qui l’emporte ?</span></div>
+                                        <div class="col" style="gap: 8px">
+                                            <div class="row" style="height: 60px; border-radius: 20px; background: var(--primary); color: var(--on-primary); padding: 0 16px">
+                                                <span style="width: 28px; height: 28px; border-radius: 14px; background: var(--secondary); display: flex; align-items: center; justify-content: center; font-weight: 700">✓</span>
+                                                <span class="grow" style="font-size: 16px; font-weight: 600">Victoire de Lyon</span>
+                                                <span style="font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--primary-soft)">Votre pronostic</span>
                                             </div>
-                                        </div>
-                                        <div class="text-right">
-                                            <div class="text-sm font-bold text-white">2,650</div>
-                                            <div class="text-[9px] text-slate-500">points</div>
+                                            <div class="row white muted" style="height: 52px; border-radius: 20px; padding: 0 16px 0 56px; font-size: 15px">Match nul</div>
+                                            <div class="row white muted" style="height: 52px; border-radius: 20px; padding: 0 16px 0 56px; font-size: 15px">Victoire de Lens</div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="screenshot-card rounded-lg p-3">
-                                    <div class="flex items-center gap-3">
-                                        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400">
-                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg>
+                                    <div class="sheet" style="gap: 16px">
+                                        <span class="handle"></span>
+                                        <div class="row" style="justify-content: space-between">
+                                            <div class="col" style="gap: 2px"><span style="font-weight: 600; color: var(--success)">Gagné</span><span style="font-size: 40px; font-weight: 700; letter-spacing: -1.5px; line-height: 1">+140 pts</span></div>
+                                            <span style="width: 64px; height: 64px; border-radius: 32px; background: var(--success-bg); display: flex; align-items: center; justify-content: center; font-size: 30px">🎉</span>
                                         </div>
-                                        <div class="flex-1">
-                                            <div class="text-[11px] font-medium text-white">WWF France</div>
-                                            <div class="text-[10px] text-slate-500">Protection de l'environnement</div>
-                                            <div class="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/5">
-                                                <div class="h-full w-1/4 rounded-full bg-gradient-to-r from-amber-400 to-orange-400"></div>
-                                            </div>
+                                        <div class="col" style="border-radius: 20px; background: var(--p06); padding: 4px 16px">
+                                            <div class="row" style="justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--p12)"><span class="muted">Votre mise, récupérée</span><b>100 pts</b></div>
+                                            <div class="row" style="justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--p12)"><span class="muted">Votre part des mises perdantes</span><b>+140 pts</b></div>
+                                            <div class="row" style="justify-content: space-between; padding: 10px 0"><b>Crédité sur votre solde</b><b>240 pts</b></div>
                                         </div>
-                                        <div class="text-right">
-                                            <div class="text-sm font-bold text-white">1,500</div>
-                                            <div class="text-[9px] text-slate-500">points</div>
+                                        <div class="row" style="padding: 12px 14px; border-radius: 20px; border: 1.5px dashed var(--s40)">
+                                            <span class="badge t-streak" style="height: 32px; padding: 0 8px; font-size: 15px">🔥3</span>
+                                            <span><b>Nouvelle série !</b> 3 paris gagnés d’affilée.</span>
                                         </div>
+                                        <span style="height: 56px; border-radius: 999px; background: var(--primary); color: var(--on-primary); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700">Voir les paris ouverts</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="mt-3 rounded-lg bg-indigo-500/10 border border-indigo-400/20 p-2.5 text-center">
-                                <div class="text-[10px] text-indigo-300">Cagnotte totale de la campagne</div>
-                                <div class="text-sm font-bold text-white mt-0.5">5,000 &euro; redistribues aux associations</div>
-                            </div>
                         </div>
-                    </div>
-                    <p class="mt-4 text-center text-sm font-medium text-slate-600">Vote pour les associations</p>
-                </div>
-                <div>
-                    <div class="screenshot app-shadow overflow-hidden rounded-xl">
-                        <div class="flex items-center gap-2 border-b border-white/5 bg-slate-900 px-3 py-2">
-                            <div class="flex gap-1.5"><div class="h-2.5 w-2.5 rounded-full bg-red-500/70"></div><div class="h-2.5 w-2.5 rounded-full bg-amber-500/70"></div><div class="h-2.5 w-2.5 rounded-full bg-emerald-500/70"></div></div>
-                            <div class="mx-auto rounded bg-slate-800 px-10 py-0.5 text-[10px] text-slate-400">Administration</div>
-                        </div>
-                        <div class="bg-slate-950 p-5">
-                            <h3 class="text-sm font-bold text-white">Gestion des campagnes</h3>
-                            <p class="text-[10px] text-slate-500 mt-1">3 campagnes actives &middot; 2 terminees</p>
-                            <div class="mt-4 space-y-2.5">
-                                <div class="screenshot-card rounded-lg p-3">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <div class="text-[11px] font-medium text-white">Coupe du monde 2026</div>
-                                            <div class="text-[10px] text-slate-500 mt-0.5">15 juin - 19 juil. &middot; 50,000 pts</div>
-                                        </div>
-                                        <div class="flex gap-1.5">
-                                            <button class="rounded-md bg-indigo-500/10 border border-indigo-400/20 px-2 py-1 text-[9px] text-indigo-300">Gerer les paris</button>
-                                            <button class="rounded-md bg-fuchsia-500/10 border border-fuchsia-400/20 px-2 py-1 text-[9px] text-fuchsia-300">Ouvrir les votes</button>
+                        <figcaption><strong>Le résultat</strong><span>Une fois le pari résolu, chacun découvre son propre résultat et ce qui revient sur son solde.</span></figcaption>
+                    </figure>
+
+                    <!-- Campagnes -->
+                    <figure>
+                        <div class="phone" role="img" aria-label="Écran Campagnes : campagnes suivies et campagnes à découvrir">
+                            <div class="viewport">
+                                <div class="screen" aria-hidden="true">
+                                    <div class="top col" style="gap: 6px">
+                                        <span class="title">Campagnes</span>
+                                        <span class="muted" style="line-height: 1.45">Suivez une campagne pour voir ses paris dans l’onglet Paris.</span>
+                                    </div>
+                                    <div class="sec" style="margin-top: 20px"><b>Vos campagnes</b><span class="muted">3 suivies</span></div>
+                                    <div class="stack" style="height: 214px">
+                                        <div class="under" style="left: 24px; right: 24px; top: 0; height: 180px; border-radius: 28px; background: var(--p20)"></div>
+                                        <div class="under" style="left: 12px; right: 12px; top: 10px; height: 180px; border-radius: 28px; background: var(--p12)"></div>
+                                        <div class="col" style="position: absolute; left: 0; right: 0; top: 22px; height: 192px; border-radius: 28px; background: var(--primary); color: var(--on-primary); padding: 20px; justify-content: space-between">
+                                            <div class="row" style="justify-content: space-between"><span class="chip-pill" style="background: var(--primary-soft)">Publique</span><span style="font-size: 13px; font-weight: 600">✓ Suivie</span></div>
+                                            <div class="col" style="gap: 4px"><span style="font-size: 24px; font-weight: 700; letter-spacing: -.5px">Ligue 1 2026-27</span><span style="opacity: .8">09/08/2026 → 23/05/2027</span></div>
+                                            <div class="row" style="justify-content: space-between"><span><b>8 paris ouverts</b> · 2 à jouer</span><span style="height: 40px; padding: 0 16px; border-radius: 999px; background: var(--secondary); display: flex; align-items: center; font-weight: 600">Voir les paris</span></div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="screenshot-card rounded-lg p-3">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <div class="text-[11px] font-medium text-white">Roland-Garros 2026</div>
-                                            <div class="text-[10px] text-slate-500 mt-0.5">20 mai - 8 juin &middot; 15,000 pts</div>
+                                    <div class="row" style="justify-content: center; gap: 6px; margin-top: 12px"><span style="width: 18px; height: 6px; border-radius: 3px; background: var(--primary)"></span><span style="width: 6px; height: 6px; border-radius: 3px; background: var(--p20)"></span><span style="width: 6px; height: 6px; border-radius: 3px; background: var(--p20)"></span></div>
+                                    <div class="sec"><b>À découvrir</b></div>
+                                    <div class="col white" style="margin: 0 16px; border-radius: 24px">
+                                        <div class="row" style="padding: 14px 16px; border-bottom: 1px solid var(--p06)">
+                                            <span style="width: 44px; height: 44px; border-radius: 14px; background: var(--s12); display: flex; align-items: center; justify-content: center; font-size: 20px">🏉</span>
+                                            <div class="grow col" style="gap: 2px"><span style="font-size: 16px; font-weight: 600">Tournoi des Six Nations</span><span class="muted" style="font-size: 13px">Publique · 05/02 → 20/03/2027</span></div>
+                                            <span style="height: 36px; padding: 0 14px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--primary); display: flex; align-items: center; font-weight: 600">Suivre</span>
                                         </div>
-                                        <div class="flex gap-1.5">
-                                            <button class="rounded-md bg-amber-500/10 border border-amber-400/20 px-2 py-1 text-[9px] text-amber-300">Resoudre</button>
+                                        <div class="row" style="padding: 14px 16px; border-bottom: 1px solid var(--p06)">
+                                            <span style="width: 44px; height: 44px; border-radius: 14px; background: var(--p12); display: flex; align-items: center; justify-content: center; font-size: 20px">🏢</span>
+                                            <div class="grow col" style="gap: 2px"><span style="font-size: 16px; font-weight: 600">Objectifs T4</span><span class="muted" style="font-size: 13px">Entreprise · jusqu’au 31/12</span></div>
+                                            <span style="height: 36px; padding: 0 14px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--primary); display: flex; align-items: center; font-weight: 600">Suivre</span>
+                                        </div>
+                                        <div class="row" style="padding: 14px 16px">
+                                            <span style="width: 44px; height: 44px; border-radius: 14px; background: var(--p12); display: flex; align-items: center; justify-content: center; font-size: 20px">🎾</span>
+                                            <div class="grow col" style="gap: 2px"><span style="font-size: 16px; font-weight: 600">Roland-Garros 2027</span><span class="muted" style="font-size: 13px">Publique · à partir du 23/05</span></div>
+                                            <span style="height: 36px; padding: 0 14px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--primary); display: flex; align-items: center; font-weight: 600">Suivre</span>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="screenshot-card rounded-lg p-3 opacity-60">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <div class="text-[11px] font-medium text-white">6 Nations 2026</div>
-                                            <div class="text-[10px] text-slate-500 mt-0.5">Terminee &middot; 20,000 pts redistribues</div>
-                                        </div>
-                                        <span class="rounded-full bg-slate-500/10 border border-slate-400/20 px-2 py-0.5 text-[9px] text-slate-400 uppercase">Terminee</span>
-                                    </div>
+                                    <div class="tabbar"><span><svg><use href="#i-home"/></svg></span><span><svg><use href="#i-ticket"/></svg></span><span class="on"><svg><use href="#i-flag"/></svg></span><span><svg><use href="#i-heart"/></svg></span><span><svg><use href="#i-trophy"/></svg></span></div>
                                 </div>
                             </div>
-                            <button class="mt-4 w-full rounded-lg border border-dashed border-white/10 py-2.5 text-[11px] text-slate-400 hover:border-white/20 hover:text-white transition">
-                                + Creer une nouvelle campagne
-                            </button>
                         </div>
-                    </div>
-                    <p class="mt-4 text-center text-sm font-medium text-slate-600">Panneau d'administration</p>
+                        <figcaption><strong>Les campagnes</strong><span>Celles de l’entreprise et les campagnes publiques, empilées : on suit ce qui nous parle.</span></figcaption>
+                    </figure>
+
+                    <!-- Dons -->
+                    <figure>
+                        <div class="phone" role="img" aria-label="Écran Dons : vote caritatif ouvert avec 2 000 euros à partager entre trois associations">
+                            <div class="viewport">
+                                <div class="screen" aria-hidden="true">
+                                    <div class="top"><span class="title">Dons</span></div>
+                                    <div class="col" style="margin: 16px 16px 0; border-radius: 28px; background: var(--primary); color: var(--on-primary); padding: 20px; gap: 14px">
+                                        <div class="row" style="justify-content: space-between"><span class="chip-pill" style="background: var(--secondary)">Vote ouvert</span><span style="font-size: 13px; opacity: .8">Du 01/11 au 15/11</span></div>
+                                        <div class="col" style="gap: 2px"><span style="opacity: .8">Vote caritatif de novembre</span><span style="font-size: 32px; font-weight: 700; letter-spacing: -1px">2 000 € à partager</span></div>
+                                        <div class="col" style="gap: 6px">
+                                            <div style="height: 8px; border-radius: 4px; background: var(--primary-soft); position: relative"><div style="position: absolute; left: 0; top: 0; bottom: 0; width: 61%; border-radius: 4px; background: var(--secondary)"></div></div>
+                                            <div class="row" style="justify-content: space-between; font-size: 13px"><span><b>760 pts</b> attribués</span><span style="opacity: .8">sur 1 240</span></div>
+                                        </div>
+                                    </div>
+                                    <p class="muted" style="margin: 12px 24px 0; font-size: 13px; line-height: 1.45">C’est un vote : vos points restent sur votre solde. La dotation est répartie au prorata des points reçus.</p>
+                                    <div class="col" style="margin: 14px 16px 0; gap: 8px">
+                                        <div class="row white" style="border-radius: 24px; padding: 14px 16px; box-shadow: inset 0 0 0 2px var(--primary)">
+                                            <span style="width: 48px; height: 48px; border-radius: 16px; background: var(--s12); display: flex; align-items: center; justify-content: center; font-size: 22px">🍲</span>
+                                            <div class="grow col" style="gap: 2px"><span style="font-size: 16px; font-weight: 600">Les Restos du Cœur</span><span class="muted" style="font-size: 13px">Aide alimentaire</span></div>
+                                            <b style="color: var(--primary-ink)">400 pts</b>
+                                        </div>
+                                        <div class="row white" style="border-radius: 24px; padding: 14px 16px">
+                                            <span style="width: 48px; height: 48px; border-radius: 16px; background: var(--s12); display: flex; align-items: center; justify-content: center; font-size: 22px">🌊</span>
+                                            <div class="grow col" style="gap: 2px"><span style="font-size: 16px; font-weight: 600">Surfrider Foundation</span><span class="muted" style="font-size: 13px">Océans et littoral</span></div>
+                                            <b style="color: var(--primary-ink)">360 pts</b>
+                                        </div>
+                                        <div class="row white" style="border-radius: 24px; padding: 14px 16px">
+                                            <span style="width: 48px; height: 48px; border-radius: 16px; background: var(--s12); display: flex; align-items: center; justify-content: center; font-size: 22px">📚</span>
+                                            <div class="grow col" style="gap: 2px"><span style="font-size: 16px; font-weight: 600">Bibliothèques Sans Frontières</span><span class="muted" style="font-size: 13px">Accès au savoir</span></div>
+                                            <b style="color: var(--primary-ink)">Attribuer</b>
+                                        </div>
+                                    </div>
+                                    <div class="tabbar"><span><svg><use href="#i-home"/></svg></span><span><svg><use href="#i-ticket"/></svg></span><span><svg><use href="#i-flag"/></svg></span><span class="on"><svg><use href="#i-heart"/></svg></span><span><svg><use href="#i-trophy"/></svg></span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <figcaption><strong>Le vote caritatif</strong><span>Une jauge montre les points déjà attribués. Voter ne coûte rien : les points restent sur le solde.</span></figcaption>
+                    </figure>
+
+                    <!-- Classement -->
+                    <figure>
+                        <div class="phone" role="img" aria-label="Écran Classement : podium des membres avec leurs badges">
+                            <div class="viewport">
+                                <div class="screen dark" aria-hidden="true">
+                                    <div class="top row" style="justify-content: space-between">
+                                        <span class="title">Classement</span>
+                                        <div class="row" style="gap: 0; padding: 4px; border-radius: 999px; background: var(--primary-soft); font-size: 13px">
+                                            <span style="height: 32px; padding: 0 12px; border-radius: 999px; background: var(--on-primary); color: var(--primary); display: flex; align-items: center; font-weight: 600">Membres</span>
+                                            <span style="height: 32px; padding: 0 12px; display: flex; align-items: center">Groupes</span>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: 24px; padding: 0 16px; display: grid; grid-template-columns: repeat(3, 1fr); align-items: end">
+                                        <div class="col" style="align-items: center; gap: 6px">
+                                            <span style="width: 60px; height: 60px; border-radius: 50%; background: var(--primary-soft); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700">HM</span>
+                                            <b>Hugo M.</b>
+                                            <div class="row" style="gap: 3px"><span class="badge t-gold">🎖️</span><span class="badge t-silver">💰</span></div>
+                                            <div class="col" style="width: 100%; height: 72px; border-radius: 18px 18px 0 0; background: var(--primary-soft); align-items: center; padding-top: 8px; gap: 2px"><span style="font-size: 22px; line-height: 1">🥈</span><span style="font-size: 13px; font-weight: 600">1 960</span></div>
+                                        </div>
+                                        <div class="col" style="align-items: center; gap: 6px">
+                                            <span style="width: 76px; height: 76px; border-radius: 50%; background: var(--secondary); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700">CR</span>
+                                            <b>Camille R.</b>
+                                            <div class="row" style="gap: 3px"><span class="badge t-platinum">🎖️</span><span class="badge t-gold">🎲</span><span class="badge t-streak">🔥5</span></div>
+                                            <div class="col" style="width: 100%; height: 100px; border-radius: 18px 18px 0 0; background: var(--secondary); align-items: center; padding-top: 8px; gap: 2px"><span style="font-size: 22px; line-height: 1">🥇</span><span style="font-size: 13px; font-weight: 600">2 180</span></div>
+                                        </div>
+                                        <div class="col" style="align-items: center; gap: 6px">
+                                            <span style="width: 60px; height: 60px; border-radius: 50%; background: var(--primary-soft); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700">IB</span>
+                                            <b>Inès B.</b>
+                                            <div class="row" style="gap: 3px"><span class="badge t-silver">🎖️</span><span class="badge t-bronze">🎲</span></div>
+                                            <div class="col" style="width: 100%; height: 54px; border-radius: 18px 18px 0 0; background: var(--primary-soft); align-items: center; padding-top: 8px; gap: 2px"><span style="font-size: 22px; line-height: 1">🥉</span><span style="font-size: 13px; font-weight: 600">1 655</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col white" style="position: absolute; left: 0; right: 0; top: 452px; bottom: 0; border-radius: 28px 28px 0 0; color: var(--text); padding: 8px 16px 0; gap: 4px">
+                                        <span class="handle" style="margin-bottom: 6px"></span>
+                                        <div class="row" style="padding: 10px 14px; border-radius: 20px; background: var(--p12)">
+                                            <b style="width: 24px; font-size: 16px">4</b>
+                                            <span style="width: 36px; height: 36px; border-radius: 18px; background: var(--primary); color: var(--on-primary); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700">AD</span>
+                                            <div class="grow col" style="gap: 3px"><b style="font-size: 15px">Vous</b><div class="row" style="gap: 3px"><span class="badge t-silver">🎖️</span><span class="badge t-bronze">🎲</span><span class="badge t-streak">🔥3</span></div></div>
+                                            <div class="col" style="align-items: flex-end"><b style="font-size: 15px">1 420</b><span class="muted" style="font-size: 12px">dont 180 en jeu</span></div>
+                                        </div>
+                                        <div class="row" style="padding: 8px 14px"><span class="muted" style="width: 24px; font-size: 15px; font-weight: 600">5</span><span style="width: 36px; height: 36px; border-radius: 18px; background: var(--p06); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700">TL</span><div class="grow col" style="gap: 3px"><span style="font-size: 15px; font-weight: 600">Thomas Leroy</span><div class="row" style="gap: 3px"><span class="badge t-silver">🎖️</span><span class="badge t-gold">💰</span></div></div><span style="font-size: 15px; font-weight: 600">1 390</span></div>
+                                        <div class="row" style="padding: 8px 14px"><span class="muted" style="width: 24px; font-size: 15px; font-weight: 600">6</span><span style="width: 36px; height: 36px; border-radius: 18px; background: var(--p06); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700">LD</span><div class="grow col" style="gap: 3px"><span style="font-size: 15px; font-weight: 600">Léa Dubois</span><div class="row" style="gap: 3px"><span class="badge t-silver">🎖️</span></div></div><span style="font-size: 15px; font-weight: 600">1 210</span></div>
+                                        <div class="row" style="padding: 8px 14px"><span class="muted" style="width: 24px; font-size: 15px; font-weight: 600">7</span><span style="width: 36px; height: 36px; border-radius: 18px; background: var(--p06); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700">YK</span><div class="grow col" style="gap: 3px"><span style="font-size: 15px; font-weight: 600">Yanis Kaci</span><div class="row" style="gap: 3px"><span class="badge t-bronze">🎖️</span><span class="badge t-streak">🔥3</span></div></div><span style="font-size: 15px; font-weight: 600">1 105</span></div>
+                                    </div>
+                                    <div class="tabbar"><span><svg><use href="#i-home"/></svg></span><span><svg><use href="#i-ticket"/></svg></span><span><svg><use href="#i-flag"/></svg></span><span><svg><use href="#i-heart"/></svg></span><span class="on"><svg><use href="#i-trophy"/></svg></span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <figcaption><strong>Le classement</strong><span>Membres ou groupes, avec rangs et titres de Bronze à Diamant et les séries de victoires en cours.</span></figcaption>
+                    </figure>
                 </div>
             </div>
-        </div>
-    </section>
-    <section id="pricing" class="border-t border-slate-100 bg-slate-50 py-20 md:py-28">
-        <div class="mx-auto max-w-6xl px-6">
-            <div class="text-center">
-                <div class="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-1.5 text-xs font-semibold text-indigo-700">
-                    Tarifs
+        </section>
+
+        <!-- Fair play -->
+        <section class="block" style="padding-top: 24px">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow">Règles du jeu</span>
+                    <h2>Un jeu fair-play, pensé pour l’entreprise</h2>
                 </div>
-                <h2 class="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
-                    Un plan pour chaque equipe
-                </h2>
-                <p class="mx-auto mt-4 max-w-xl text-base text-slate-500">
-                    Commencez gratuitement, evoluez quand vous en avez besoin. Pas de surprise, pas d'engagement.
-                </p>
-            </div>
-            <div class="mt-14 grid gap-6 lg:grid-cols-3">
-                <div class="flex flex-col rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-                    <div>
-                        <h3 class="text-lg font-bold text-slate-900">Starter</h3>
-                        <p class="mt-1 text-sm text-slate-500">Pour decouvrir Riddono en equipe restreinte.</p>
-                    </div>
-                    <div class="mt-6">
-                        <span class="text-4xl font-extrabold text-slate-900">0 &euro;</span>
-                        <span class="text-sm text-slate-500"> / mois</span>
-                    </div>
-                    <ul class="mt-8 flex-1 space-y-3 text-sm text-slate-600">
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            Jusqu'a 25 joueurs
-                        </li>
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            1 campagne active
-                        </li>
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            3 associations par campagne
-                        </li>
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            Classement et historique
-                        </li>
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-slate-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                            <span class="text-slate-400">Campagnes publiques</span>
-                        </li>
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-slate-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                            <span class="text-slate-400">Support prioritaire</span>
-                        </li>
-                    </ul>
-                    <a href="#" class="mt-8 block rounded-full border border-slate-200 py-2.5 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
-                        Commencer gratuitement
-                    </a>
-                </div>
-                <div class="pricing-popular relative flex flex-col rounded-2xl border-2 border-indigo-500 bg-white p-8">
-                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-indigo-600 px-4 py-1 text-xs font-semibold text-white">
-                        Populaire
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-slate-900">Pro</h3>
-                        <p class="mt-1 text-sm text-slate-500">Pour les entreprises qui veulent maximiser l'engagement.</p>
-                    </div>
-                    <div class="mt-6">
-                        <span class="text-4xl font-extrabold text-slate-900">49 &euro;</span>
-                        <span class="text-sm text-slate-500"> / mois</span>
-                    </div>
-                    <ul class="mt-8 flex-1 space-y-3 text-sm text-slate-600">
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            Jusqu'a 200 joueurs
-                        </li>
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            Campagnes illimitees
-                        </li>
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            Associations illimitees
-                        </li>
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            Campagnes publiques
-                        </li>
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            Tous les modificateurs de paris
-                        </li>
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            Support prioritaire
-                        </li>
-                    </ul>
-                    <a href="#" class="mt-8 block rounded-full bg-indigo-600 py-2.5 text-center text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition hover:bg-indigo-700">
-                        Essayer 14 jours gratuit
-                    </a>
-                </div>
-                <div class="flex flex-col rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-                    <div>
-                        <h3 class="text-lg font-bold text-slate-900">Entreprise</h3>
-                        <p class="mt-1 text-sm text-slate-500">Pour les grands groupes avec des besoins sur mesure.</p>
-                    </div>
-                    <div class="mt-6">
-                        <span class="text-4xl font-extrabold text-slate-900">Sur devis</span>
-                    </div>
-                    <ul class="mt-8 flex-1 space-y-3 text-sm text-slate-600">
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            Joueurs illimites
-                        </li>
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            Tout dans Pro
-                        </li>
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            SSO / SAML
-                        </li>
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            Multi-filiales
-                        </li>
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            API et webhooks
-                        </li>
-                        <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            Account manager dedie
-                        </li>
-                    </ul>
-                    <a href="#" class="mt-8 block rounded-full border border-slate-200 py-2.5 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
-                        Contactez-nous
-                    </a>
+                <div class="split">
+                    <article class="card">
+                        <span class="icon-chip p"><svg width="24" height="24" aria-hidden="true"><use href="#i-lock"/></svg></span>
+                        <h3>Les mises restent secrètes</h3>
+                        <ul class="check-list">
+                            <li><svg width="18" height="18" aria-hidden="true"><use href="#i-check"/></svg>Personne ne voit ce que les autres ont misé, ni sur quoi.</li>
+                            <li><svg width="18" height="18" aria-hidden="true"><use href="#i-check"/></svg>Chacun découvre son propre résultat une fois le pari résolu.</li>
+                            <li><svg width="18" height="18" aria-hidden="true"><use href="#i-check"/></svg>Chaque entreprise a sa propre cagnotte, même sur une campagne publique : les points ne passent jamais d’une entreprise à l’autre.</li>
+                        </ul>
+                    </article>
+                    <article class="card">
+                        <span class="icon-chip s"><svg width="24" height="24" aria-hidden="true"><use href="#i-heart"/></svg></span>
+                        <h3>Personne ne perd sur un coup du sort</h3>
+                        <ul class="check-list">
+                            <li><svg width="18" height="18" aria-hidden="true"><use href="#i-check"/></svg>Si personne n’a trouvé la bonne réponse, toutes les mises sont remboursées.</li>
+                            <li><svg width="18" height="18" aria-hidden="true"><use href="#i-check"/></svg>Un match annulé ou une question erronée ? Le pari est annulé et chaque mise est rendue.</li>
+                            <li><svg width="18" height="18" aria-hidden="true"><use href="#i-check"/></svg>Voter pour une association ne coûte aucun point.</li>
+                        </ul>
+                    </article>
                 </div>
             </div>
-        </div>
-    </section>
-    <section class="py-20 md:py-28">
-        <div class="mx-auto max-w-4xl px-6 text-center">
-            <h2 class="text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
-                Pret a transformer vos paris d'equipe en impact social ?
-            </h2>
-            <p class="mx-auto mt-4 max-w-xl text-base text-slate-500">
-                Rejoignez les entreprises qui utilisent Riddono pour renforcer la cohesion, stimuler l'engagement et soutenir des causes qui comptent.
-            </p>
-            <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-                <a href="#pricing" class="inline-flex items-center gap-2 rounded-full bg-indigo-600 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition hover:bg-indigo-700">
-                    Demarrer gratuitement
-                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M7.05 4.05a1 1 0 011.41 0l5.3 5.3a1 1 0 010 1.4l-5.3 5.3a1 1 0 11-1.41-1.4L11.64 10 7.05 5.46a1 1 0 010-1.41z"/></svg>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq" class="block" style="padding-top: 24px">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow">Questions fréquentes</span>
+                    <h2>Bon à savoir</h2>
+                </div>
+                <div class="faq">
+                    <details>
+                        <summary>Est-ce qu’on parie de l’argent ?</summary>
+                        <p>Non. Les collègues parient des points, crédités par l’entreprise ou par ses outils. Les seuls euros en jeu sont la dotation que l’entreprise reverse aux associations, répartie selon le vote de ses équipes.</p>
+                    </details>
+                    <details>
+                        <summary>Comment sont calculés les gains ?</summary>
+                        <p>Les gagnants récupèrent leur mise et se partagent les mises perdantes de leur entreprise. Le montant n’est révélé qu’à la résolution : comme les mises sont secrètes, aucune cote ni estimation n’est affichée avant.</p>
+                    </details>
+                    <details>
+                        <summary>Que se passe-t-il quand je vote pour une association ?</summary>
+                        <p>Rien ne quitte votre solde : vous indiquez combien de points vous attribuez à chaque association, dans la limite de votre solde. À la clôture du vote, la dotation de l’entreprise est partagée au prorata des points reçus.</p>
+                    </details>
+                    <details>
+                        <summary>Comment mes collègues se connectent-ils ?</summary>
+                        <p>Avec leur compte Google professionnel, après avoir été invités par un administrateur de l’entreprise. Pas de mot de passe à retenir, et un compte désactivé ne peut plus se connecter.</p>
+                    </details>
+                    <details>
+                        <summary>Sur quels appareils fonctionne Betty ?</summary>
+                        <p>Betty est une app mobile pour iPhone et Android. L’espace d’administration y est inclus.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact" class="block" style="padding-top: 24px; padding-bottom: 24px">
+            <div class="container">
+                <div class="cta">
+                    <div class="cta-intro">
+                        <span class="logo-placeholder" aria-hidden="true" style="width: 64px; height: 64px; border-radius: 22px; font-size: 11px">Logo</span>
+                        <h2>Envie de faire jouer vos équipes pour la bonne cause ?</h2>
+                        <p>Laissez-nous un message : nous revenons vers vous pour vous présenter Betty et préparer le lancement dans votre entreprise.</p>
+                    </div>
+                    <form id="contact-form" class="contact-form" novalidate>
+                        <div class="field">
+                            <label for="contact-name">Nom</label>
+                            <input id="contact-name" name="name" type="text" autocomplete="name" required>
+                        </div>
+                        <div class="field">
+                            <label for="contact-email">Email professionnel</label>
+                            <input id="contact-email" name="email" type="email" autocomplete="email" required>
+                        </div>
+                        <div class="field full">
+                            <label for="contact-company">Entreprise</label>
+                            <input id="contact-company" name="company" type="text" autocomplete="organization" required>
+                        </div>
+                        <div class="field full">
+                            <label for="contact-message">Message <span class="optional">(facultatif)</span></label>
+                            <textarea id="contact-message" name="message" rows="4" placeholder="Taille de l’équipe, date de lancement souhaitée…"></textarea>
+                        </div>
+                        <!-- Honeypot: hidden from people, filled by bots. -->
+                        <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="honeypot">
+                        <div class="form-footer full">
+                            <button type="submit" class="btn btn-secondary">Envoyer</button>
+                            <p class="form-status" role="status" aria-live="polite"></p>
+                        </div>
+                        <p class="form-legal full">Nous utilisons ces informations uniquement pour vous répondre. <a href="confidentialite.html">Politique de confidentialité</a></p>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <a href="#" class="brand" aria-label="Betty, haut de page">
+                    <!-- TODO: replace with the Betty logo and logotype -->
+                    <span class="logo-placeholder" aria-hidden="true">Logo</span>
+                    <span class="logotype-placeholder">Betty</span>
                 </a>
-                <a href="mailto:contact@riddono.com" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-7 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50">
-                    Parler a un expert
-                </a>
+                <nav aria-label="Liens de pied de page">
+                    <a href="#fonctionnalites">Fonctionnalités</a>
+                    <a href="#faq">FAQ</a>
+                    <a href="conditions.html">Conditions d’utilisation</a>
+                    <a href="confidentialite.html">Confidentialité</a>
+                    <a href="#contact">Contact</a>
+                </nav>
             </div>
-        </div>
-    </section>
-    <footer class="border-t border-slate-100 bg-slate-50 py-12">
-        <div class="mx-auto max-w-6xl px-6">
-            <div class="flex flex-col items-center justify-between gap-6 md:flex-row">
-                <div class="flex items-center gap-2.5">
-                    <div class="relative h-8 w-8">
-                        <div class="gradient-ring absolute inset-0 rounded-lg"></div>
-                        <div class="absolute inset-[2px] flex items-center justify-center rounded-[6px] bg-slate-50 text-sm font-black text-slate-900">R</div>
-                    </div>
-                    <span class="font-bold text-slate-900">Riddono</span>
-                </div>
-                <div class="flex items-center gap-6 text-sm text-slate-500">
-                    <a href="#features" class="hover:text-slate-900">Fonctionnalites</a>
-                    <a href="#pricing" class="hover:text-slate-900">Tarifs</a>
-                    <a href="#" class="hover:text-slate-900">Conditions</a>
-                    <a href="#" class="hover:text-slate-900">Confidentialite</a>
-                    <a href="mailto:contact@riddono.com" class="hover:text-slate-900">Contact</a>
-                </div>
-            </div>
-            <div class="mt-8 border-t border-slate-200 pt-6 text-center text-xs text-slate-400">
-                &copy; 2026 Riddono. Les paris B2B au service du bien.
-            </div>
+            <p class="legal">© 2026 Betty, édité par Artysan. Les paris entre collègues, pour la bonne cause.</p>
         </div>
     </footer>
 
+    <script>
+        // Where the contact form goes. Set CONTACT_ENDPOINT to a form service URL
+        // (Formspree, Web3Forms, or an API route) that accepts a POST of form data;
+        // until then the form opens the visitor's mail app addressed to CONTACT_EMAIL.
+        const CONTACT_ENDPOINT = ''; // TODO
+        const CONTACT_EMAIL = 'contact@artysan.dev';
+
+        const form = document.getElementById('contact-form');
+        const status = form.querySelector('.form-status');
+        const submit = form.querySelector('button[type="submit"]');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            status.textContent = '';
+            let firstInvalid = null;
+            for (const field of form.querySelectorAll('input[required]')) {
+                const valid = field.checkValidity() && field.value.trim() !== '';
+                field.setAttribute('aria-invalid', valid ? 'false' : 'true');
+                if (!valid && !firstInvalid) firstInvalid = field;
+            }
+            if (firstInvalid) {
+                status.textContent = 'Merci de renseigner votre nom, un email valide et votre entreprise.';
+                firstInvalid.focus();
+                return;
+            }
+            const data = new FormData(form);
+            if (data.get('website')) return;
+            data.delete('website');
+
+            if (!CONTACT_ENDPOINT) {
+                const body = `${data.get('message') || ''}\n\n${data.get('name')}\n${data.get('company')}\n${data.get('email')}`;
+                window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`Betty pour ${data.get('company')}`)}&body=${encodeURIComponent(body.trim())}`;
+                return;
+            }
+
+            submit.disabled = true;
+            try {
+                const response = await fetch(CONTACT_ENDPOINT, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+                if (!response.ok) throw new Error(String(response.status));
+                form.reset();
+                status.textContent = 'Merci ! Votre message est bien parti, nous revenons vers vous très vite.';
+            } catch {
+                status.textContent = `L’envoi n’a pas fonctionné. Réessayez, ou écrivez-nous à ${CONTACT_EMAIL}.`;
+            } finally {
+                submit.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>

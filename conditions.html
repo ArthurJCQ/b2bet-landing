@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Conditions d’utilisation — Betty</title>
+    <meta name="description" content="Les règles d’utilisation de l’application Betty : accès, points, paris, votes caritatifs et responsabilités.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <style>
+        /* Same tokens as index.html ("Pile" design, default brand). */
+        :root {
+            --primary: #001733;
+            --on-primary: #FFFFFF;
+            --primary-soft: #293C54;
+            --p06: #F0F1F3;
+            --p12: #DBDFE2;
+            --secondary: #D33857;
+            --on-secondary: #FFFFFF;
+            --secondary-ink: #D33857;
+            --s12: #FAE7EB;
+            --text: #15161C;
+            --muted: #4D5262;
+            --body: #2A2E3A;
+            --white: #FFFFFF;
+            --shadow-floating: 0 8px 24px rgba(0, 23, 51, .25);
+            --font: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { margin: 0; background: var(--p06); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+        a { color: inherit; }
+        .container { max-width: 1160px; margin: 0 auto; padding: 0 20px; }
+
+        .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-placeholder {
+            width: 40px; height: 40px; border-radius: 14px; flex-shrink: 0;
+            border: 2px dashed currentColor; opacity: .85;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 9px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase;
+        }
+        .logotype-placeholder { font-size: 22px; font-weight: 700; letter-spacing: -.6px; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; height: 44px; padding: 0 18px; border-radius: 999px; font: 600 15px var(--font); text-decoration: none; background: var(--secondary); color: var(--on-secondary); }
+
+        .site-header { position: sticky; top: 0; z-index: 50; padding: 12px 0; }
+        .site-header .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 8px 8px 8px 16px; border-radius: 999px; background: var(--primary); color: var(--on-primary); box-shadow: var(--shadow-floating); }
+
+        main { padding: 40px 0 24px; }
+        .doc { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+        .doc-head { padding: 8px 4px 20px; }
+        .eyebrow { font-size: 14px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--secondary-ink); }
+        h1 { margin: 10px 0 0; font-size: clamp(34px, 5vw, 52px); line-height: 1.05; letter-spacing: -1.5px; }
+        .updated { margin: 14px 0 0; color: var(--muted); font-size: 15px; }
+        .summary { background: var(--primary); color: var(--on-primary); border-radius: 28px; padding: 28px; }
+        .summary h2 { margin: 0 0 12px; font-size: 20px; }
+        .summary ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; line-height: 1.55; color: rgba(255, 255, 255, .88); }
+        section.card { background: var(--white); border-radius: 24px; padding: 28px; scroll-margin-top: 96px; }
+        section.card h2 { margin: 0 0 14px; font-size: 22px; letter-spacing: -.3px; }
+        section.card h3 { margin: 22px 0 8px; font-size: 17px; }
+        section.card p, section.card li { font-size: 16px; line-height: 1.65; color: var(--body); }
+        section.card p { margin: 0 0 12px; }
+        section.card ul { margin: 0 0 12px; padding-left: 22px; }
+        section.card li + li { margin-top: 6px; }
+        .table-wrap { overflow-x: auto; margin: 4px 0 12px; }
+        table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.5; min-width: 560px; }
+        th, td { text-align: left; vertical-align: top; padding: 12px 10px; border-bottom: 1px solid var(--p12); }
+        th { font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+        td:first-child { font-weight: 600; }
+        /* Facts only the publisher can give: fill them in before publishing. */
+        .todo { background: var(--s12); color: #9E1F3B; border-radius: 6px; padding: 1px 6px; font-weight: 600; }
+
+        footer { padding: 32px 0 40px; }
+        footer .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; }
+        footer nav { display: flex; flex-wrap: wrap; gap: 20px; font-size: 15px; color: var(--muted); }
+        footer nav a { text-decoration: none; }
+        footer nav a:hover { color: var(--text); }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="bar">
+                <a href="./" class="brand" aria-label="Betty, accueil">
+                    <!-- TODO: replace with the Betty logo and logotype -->
+                    <span class="logo-placeholder" aria-hidden="true">Logo</span>
+                    <span class="logotype-placeholder">Betty</span>
+                </a>
+                <a href="./#contact" class="btn">Nous contacter</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <article class="doc">
+                <div class="doc-head">
+                    <span class="eyebrow">Conditions</span>
+                    <h1>Conditions d’utilisation</h1>
+                    <p class="updated">Dernière mise à jour : 29 octobre 2026</p>
+                </div>
+
+                <div class="summary">
+                    <h2>En bref</h2>
+                    <ul>
+                        <li>Betty est un jeu entre collègues : on y mise des points, jamais d’argent, et les points n’ont aucune valeur monétaire.</li>
+                        <li>Votre compte est créé et géré par votre entreprise.</li>
+                        <li>Une mise est définitive, et personne ne voit ce que vous avez misé.</li>
+                        <li>Les dons aux associations sont décidés et versés par votre entreprise.</li>
+                    </ul>
+                </div>
+
+                <section class="card" id="objet">
+                    <h2>1. Objet</h2>
+                    <p>Les présentes conditions encadrent l’utilisation de l’application Betty (iOS, Android et sa version web) par les membres des entreprises clientes. Betty est éditée par Artysan (ci-après « nous »), joignable à <a href="mailto:contact@artysan.dev">contact@artysan.dev</a>.</p>
+                    <p>En utilisant Betty, vous acceptez ces conditions. La relation entre Betty et votre entreprise (abonnement, engagements de service) relève d’un contrat distinct conclu avec elle.</p>
+                </section>
+
+                <section class="card" id="acces">
+                    <h2>2. Accès au service</h2>
+                    <ul>
+                        <li>Betty est réservée aux collaborateurs invités par une entreprise cliente et âgés d’au moins 18 ans. Il n’est pas possible de créer un compte soi-même.</li>
+                        <li>Vous vous connectez avec votre compte Google professionnel. Votre compte est personnel : ne le partagez pas et ne l’utilisez pas au nom d’un autre.</li>
+                        <li>Les administrateurs de votre entreprise gèrent votre compte : ils peuvent modifier votre groupe, vous créditer des points ou désactiver votre compte, par exemple à votre départ de l’entreprise.</li>
+                    </ul>
+                </section>
+
+                <section class="card" id="points">
+                    <h2>3. Les points</h2>
+                    <ul>
+                        <li>Les points sont crédités par votre entreprise, à la main ou depuis ses propres outils. Ils ne s’achètent pas.</li>
+                        <li>Ils n’ont aucune valeur monétaire : ils ne peuvent être ni échangés contre de l’argent, des biens ou des services, ni vendus, ni transférés à une autre personne ou à une autre entreprise.</li>
+                        <li>Aucune somme d’argent n’est misée ni gagnée par les membres. Betty n’est pas un jeu d’argent.</li>
+                        <li>Votre entreprise peut faire évoluer la façon dont elle attribue des points. Les points d’un compte désactivé ne sont plus utilisables.</li>
+                    </ul>
+                </section>
+
+                <section class="card" id="paris">
+                    <h2>4. Les paris</h2>
+                    <ul>
+                        <li>Les paris sont proposés dans des campagnes, créées par votre entreprise ou, pour les campagnes publiques, par Betty. Vous pouvez parier sur les paris des campagnes que vous suivez, jusqu’à leur clôture.</li>
+                        <li><strong>Une mise est définitive</strong> : une fois placée, elle ne peut être ni modifiée ni annulée. Les points misés sont retirés de votre solde jusqu’au règlement du pari.</li>
+                        <li><strong>Les mises sont secrètes</strong> : ni vos collègues ni les administrateurs ne voient ce que vous avez misé. Aucune cote ni estimation de gain n’est affichée.</li>
+                        <li><strong>Résolution</strong> : la bonne réponse est désignée par les administrateurs de votre entreprise, par Betty pour les campagnes publiques, ou à partir des résultats officiels pour les matchs synchronisés. Les gagnants récupèrent leur mise et se partagent les mises perdantes de leur entreprise. Si personne n’a trouvé la bonne réponse, toutes les mises sont remboursées.</li>
+                        <li><strong>Annulation</strong> : un pari peut être annulé (événement annulé, question erronée…). Toutes les mises sont alors remboursées.</li>
+                        <li>Chaque entreprise a sa propre cagnotte : sur une campagne publique, les points ne circulent jamais d’une entreprise à l’autre.</li>
+                    </ul>
+                </section>
+
+                <section class="card" id="dons">
+                    <h2>5. Les votes caritatifs</h2>
+                    <ul>
+                        <li>Votre entreprise peut ouvrir un vote pour répartir une dotation entre des associations. Vous y attribuez des points, dans la limite de votre solde ; ces points ne sont pas dépensés et restent sur votre solde.</li>
+                        <li>À la clôture du vote, la dotation est répartie au prorata des points reçus par chaque association.</li>
+                        <li>Le montant de la dotation, le choix des associations proposées et le versement des dons relèvent de votre entreprise, sous sa seule responsabilité. Betty ne collecte, ne détient ni ne reverse aucune somme.</li>
+                    </ul>
+                </section>
+
+                <section class="card" id="comportement">
+                    <h2>6. Règles de bonne conduite</h2>
+                    <p>Betty est un jeu convivial entre collègues. Vous vous engagez à :</p>
+                    <ul>
+                        <li>ne pas tenter de contourner les règles du jeu, d’accéder aux données d’autres membres ou d’autres entreprises, ni de perturber le fonctionnement du service ;</li>
+                        <li>si vous êtes administrateur, ne publier que des campagnes, des paris et des associations respectueux des personnes : pas de contenu injurieux, discriminatoire ou humiliant, ni de pari portant sur la vie privée, la santé ou la situation professionnelle d’un collègue (par exemple un départ ou une promotion) ;</li>
+                        <li>ne pas utiliser Betty pour organiser des paris en argent en dehors de l’application.</li>
+                    </ul>
+                    <p>Les administrateurs de votre entreprise sont responsables des contenus qu’ils publient. En cas d’abus, nous pouvons demander à votre entreprise de retirer un contenu ou de désactiver un compte.</p>
+                </section>
+
+                <section class="card" id="disponibilite">
+                    <h2>7. Disponibilité et évolutions</h2>
+                    <p>Nous faisons notre possible pour que Betty soit disponible et fonctionne correctement, sans pouvoir garantir l’absence d’interruption (maintenance, panne, indisponibilité d’un prestataire comme le fournisseur des résultats sportifs). Betty évolue : des fonctionnalités peuvent être ajoutées, modifiées ou retirées. Une mise à jour de l’application peut être nécessaire pour continuer à l’utiliser.</p>
+                </section>
+
+                <section class="card" id="responsabilite">
+                    <h2>8. Responsabilité</h2>
+                    <p>Betty est un jeu sans enjeu financier. Dans les limites permises par la loi, nous ne pouvons être tenus responsables ni d’une perte de points, ni d’une erreur de résolution commise par un administrateur, ni des décisions de votre entreprise concernant les dons. En cas d’erreur technique de notre part, nous pouvons rétablir les soldes et les résultats concernés.</p>
+                </section>
+
+                <section class="card" id="propriete">
+                    <h2>9. Propriété intellectuelle</h2>
+                    <p>L’application, son design, ses textes et son logo appartiennent à l’éditeur. Vous disposez d’un droit d’utilisation personnel et non exclusif, pour la durée de votre accès au service. Les noms et logos des associations et des compétitions sportives appartiennent à leurs titulaires respectifs.</p>
+                </section>
+
+                <section class="card" id="donnees">
+                    <h2>10. Données personnelles</h2>
+                    <p>Le traitement de vos données est décrit dans notre <a href="confidentialite.html">politique de confidentialité</a>, qui explique aussi comment <a href="confidentialite.html#suppression">supprimer votre compte</a>.</p>
+                </section>
+
+                <section class="card" id="fin">
+                    <h2>11. Fin de l’utilisation</h2>
+                    <p>Vous pouvez cesser d’utiliser Betty à tout moment et demander la suppression de votre compte. Votre accès prend fin lorsque votre entreprise désactive votre compte ou met fin à son contrat avec Betty.</p>
+                </section>
+
+                <section class="card" id="modifications">
+                    <h2>12. Modification des conditions</h2>
+                    <p>Nous pouvons modifier ces conditions, notamment lorsque l’application évolue. La date de dernière mise à jour figure en haut de cette page, et nous vous informons de tout changement important. Continuer à utiliser Betty après ce changement vaut acceptation des nouvelles conditions.</p>
+                </section>
+
+                <section class="card" id="droit">
+                    <h2>13. Droit applicable</h2>
+                    <p>Ces conditions sont soumises au droit français. En cas de difficulté, écrivez-nous d’abord à <a href="mailto:contact@artysan.dev">contact@artysan.dev</a> : nous chercherons une solution amiable avant toute autre démarche.</p>
+                </section>
+            </article>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <a href="./" class="brand" aria-label="Betty, accueil">
+                    <!-- TODO: replace with the Betty logo and logotype -->
+                    <span class="logo-placeholder" aria-hidden="true">Logo</span>
+                    <span class="logotype-placeholder">Betty</span>
+                </a>
+                <nav aria-label="Liens de pied de page">
+                    <a href="./">Accueil</a>
+                    <a href="./#faq">FAQ</a>
+                    <a href="conditions.html">Conditions d’utilisation</a>
+                    <a href="confidentialite.html">Confidentialité</a>
+                    <a href="confidentialite.html#suppression">Supprimer mon compte</a>
+                    <a href="./#contact">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
