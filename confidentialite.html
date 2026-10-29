@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Politique de confidentialité — Betty</title>
+    <meta name="description" content="Quelles données l’application Betty traite, pourquoi, combien de temps, et comment exercer vos droits.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <style>
+        /* Same tokens as index.html ("Pile" design, default brand). */
+        :root {
+            --primary: #001733;
+            --on-primary: #FFFFFF;
+            --primary-soft: #293C54;
+            --p06: #F0F1F3;
+            --p12: #DBDFE2;
+            --secondary: #D33857;
+            --on-secondary: #FFFFFF;
+            --secondary-ink: #D33857;
+            --s12: #FAE7EB;
+            --text: #15161C;
+            --muted: #4D5262;
+            --body: #2A2E3A;
+            --white: #FFFFFF;
+            --shadow-floating: 0 8px 24px rgba(0, 23, 51, .25);
+            --font: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { margin: 0; background: var(--p06); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+        a { color: inherit; }
+        .container { max-width: 1160px; margin: 0 auto; padding: 0 20px; }
+
+        .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-placeholder {
+            width: 40px; height: 40px; border-radius: 14px; flex-shrink: 0;
+            border: 2px dashed currentColor; opacity: .85;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 9px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase;
+        }
+        .logotype-placeholder { font-size: 22px; font-weight: 700; letter-spacing: -.6px; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; height: 44px; padding: 0 18px; border-radius: 999px; font: 600 15px var(--font); text-decoration: none; background: var(--secondary); color: var(--on-secondary); }
+
+        .site-header { position: sticky; top: 0; z-index: 50; padding: 12px 0; }
+        .site-header .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 8px 8px 8px 16px; border-radius: 999px; background: var(--primary); color: var(--on-primary); box-shadow: var(--shadow-floating); }
+
+        main { padding: 40px 0 24px; }
+        .doc { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+        .doc-head { padding: 8px 4px 20px; }
+        .eyebrow { font-size: 14px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--secondary-ink); }
+        h1 { margin: 10px 0 0; font-size: clamp(34px, 5vw, 52px); line-height: 1.05; letter-spacing: -1.5px; }
+        .updated { margin: 14px 0 0; color: var(--muted); font-size: 15px; }
+        .summary { background: var(--primary); color: var(--on-primary); border-radius: 28px; padding: 28px; }
+        .summary h2 { margin: 0 0 12px; font-size: 20px; }
+        .summary ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; line-height: 1.55; color: rgba(255, 255, 255, .88); }
+        section.card { background: var(--white); border-radius: 24px; padding: 28px; scroll-margin-top: 96px; }
+        section.card h2 { margin: 0 0 14px; font-size: 22px; letter-spacing: -.3px; }
+        section.card h3 { margin: 22px 0 8px; font-size: 17px; }
+        section.card p, section.card li { font-size: 16px; line-height: 1.65; color: var(--body); }
+        section.card p { margin: 0 0 12px; }
+        section.card ul { margin: 0 0 12px; padding-left: 22px; }
+        section.card li + li { margin-top: 6px; }
+        .table-wrap { overflow-x: auto; margin: 4px 0 12px; }
+        table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.5; min-width: 560px; }
+        th, td { text-align: left; vertical-align: top; padding: 12px 10px; border-bottom: 1px solid var(--p12); }
+        th { font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+        td:first-child { font-weight: 600; }
+        /* Facts only the publisher can give: fill them in before publishing. */
+        .todo { background: var(--s12); color: #9E1F3B; border-radius: 6px; padding: 1px 6px; font-weight: 600; }
+
+        footer { padding: 32px 0 40px; }
+        footer .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; }
+        footer nav { display: flex; flex-wrap: wrap; gap: 20px; font-size: 15px; color: var(--muted); }
+        footer nav a { text-decoration: none; }
+        footer nav a:hover { color: var(--text); }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="bar">
+                <a href="./" class="brand" aria-label="Betty, accueil">
+                    <!-- TODO: replace with the Betty logo and logotype -->
+                    <span class="logo-placeholder" aria-hidden="true">Logo</span>
+                    <span class="logotype-placeholder">Betty</span>
+                </a>
+                <a href="./#contact" class="btn">Nous contacter</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <article class="doc">
+                <div class="doc-head">
+                    <span class="eyebrow">Confidentialité</span>
+                    <h1>Politique de confidentialité</h1>
+                    <p class="updated">Dernière mise à jour : 29 octobre 2026</p>
+                </div>
+
+                <div class="summary">
+                    <h2>En bref</h2>
+                    <ul>
+                        <li>Betty n’utilise ni publicité, ni outil de mesure d’audience, ni traceur, et ne vend aucune donnée.</li>
+                        <li>On n’y mise jamais d’argent : seulement des points, sans valeur monétaire.</li>
+                        <li>Vos mises restent secrètes : vos collègues ne voient ni ce que vous avez misé, ni sur quoi.</li>
+                        <li>Vous pouvez demander à tout moment l’accès à vos données ou leur suppression.</li>
+                    </ul>
+                </div>
+
+                <section class="card" id="qui">
+                    <h2>1. Qui sommes-nous ?</h2>
+                    <p>Betty est une application qui permet aux collaborateurs d’une entreprise de parier des points entre collègues et de voter pour les associations auxquelles leur entreprise fait des dons. Elle est éditée par <span class="todo">[NOM OU RAISON SOCIALE DE L’ÉDITEUR]</span>, <span class="todo">[ADRESSE POSTALE]</span> (ci-après « nous »).</p>
+                    <p>Cette politique couvre l’application Betty (iOS, Android et sa version web) ainsi que le site betty.artysan.dev.</p>
+                    <p><strong>Nos rôles.</strong> Betty est proposée aux entreprises, qui y inscrivent leurs collaborateurs. Pour les données des membres d’une entreprise, celle-ci est responsable du traitement et nous agissons pour son compte, en tant que sous-traitant. Pour les messages envoyés par le formulaire de contact du site, nous sommes responsable du traitement.</p>
+                    <p><strong>Contact :</strong> pour toute question sur vos données, écrivez-nous à <span class="todo">[EMAIL DE CONTACT]</span>.</p>
+                </section>
+
+                <section class="card" id="donnees">
+                    <h2>2. Les données que nous traitons</h2>
+                    <h3>Votre compte</h3>
+                    <ul>
+                        <li>Votre prénom, votre nom et votre adresse email professionnelle, renseignés par l’administrateur de votre entreprise lorsqu’il vous invite.</li>
+                        <li>Votre entreprise, votre rôle (membre ou administrateur) et, le cas échéant, votre groupe ou équipe.</li>
+                        <li>La date de votre dernière connexion et, si votre compte est désactivé, la date de désactivation.</li>
+                    </ul>
+                    <h3>Votre connexion avec Google</h3>
+                    <p>Vous vous connectez avec votre compte Google professionnel. Google nous confirme votre identité et nous transmet votre adresse email et votre nom, que nous comparons au compte créé par votre entreprise. Nous ne recevons jamais votre mot de passe Google et nous n’accédons à aucune autre donnée de votre compte Google (agenda, contacts, fichiers…).</p>
+                    <h3>Votre activité dans Betty</h3>
+                    <ul>
+                        <li>Les campagnes que vous suivez.</li>
+                        <li>Vos mises : le pari, la réponse choisie, le nombre de points misés, la date, et le résultat une fois le pari réglé.</li>
+                        <li>Votre solde et l’historique de vos mouvements de points (crédits, mises, gains, remboursements).</li>
+                        <li>Les points que vous attribuez aux associations lors des votes caritatifs.</li>
+                        <li>Votre progression dans le jeu : rang, titres et séries de victoires.</li>
+                    </ul>
+                    <h3>Les notifications</h3>
+                    <p>Si vous autorisez les notifications, nous enregistrons le jeton de notification de votre appareil et sa plateforme (iOS ou Android), ainsi que les types de notifications que vous avez désactivés.</p>
+                    <h3>Les points crédités par les outils de votre entreprise</h3>
+                    <p>Votre entreprise peut créditer des points depuis ses propres outils. Nous conservons alors chaque crédit : le montant, le motif éventuel indiqué par votre entreprise et la date.</p>
+                    <h3>Le formulaire de contact du site</h3>
+                    <p>Si vous nous écrivez depuis le site, nous recevons votre nom, votre email professionnel, le nom de votre entreprise et votre message.</p>
+                    <h3>Ce que nous ne collectons pas</h3>
+                    <p>Aucune donnée de localisation, aucun contact, aucune photo, aucun identifiant publicitaire, aucune donnée bancaire. L’application n’intègre ni outil de mesure d’audience, ni outil publicitaire, ni outil de suivi.</p>
+                </section>
+
+                <section class="card" id="finalites">
+                    <h2>3. Pourquoi nous les utilisons</h2>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr><th scope="col">Finalité</th><th scope="col">Données</th><th scope="col">Base légale</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Vous connecter et sécuriser votre compte</td><td>Compte, connexion Google</td><td>Exécution du contrat conclu avec votre entreprise</td></tr>
+                                <tr><td>Faire fonctionner le jeu : paris, règlement des mises, solde, classement, progression</td><td>Compte, activité</td><td>Exécution du contrat</td></tr>
+                                <tr><td>Organiser les votes caritatifs et répartir la dotation de votre entreprise</td><td>Compte, votes</td><td>Exécution du contrat</td></tr>
+                                <tr><td>Vous envoyer des notifications (nouveau pari, résultat, vote)</td><td>Jeton de l’appareil, préférences</td><td>Votre consentement, donné dans votre téléphone et modifiable à tout moment</td></tr>
+                                <tr><td>Vous envoyer des emails liés au service (invitation, nouvelle campagne, ouverture et clôture d’un vote)</td><td>Nom, email</td><td>Exécution du contrat</td></tr>
+                                <tr><td>Répondre à une demande de contact</td><td>Formulaire de contact</td><td>Notre intérêt légitime à répondre aux entreprises intéressées</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>Vos données ne sont utilisées ni pour de la publicité, ni pour du profilage, ni pour une prise de décision automatisée vous concernant.</p>
+                </section>
+
+                <section class="card" id="visibilite">
+                    <h2>4. Ce que voient les autres</h2>
+                    <ul>
+                        <li><strong>Vos collègues</strong> voient votre nom, votre place au classement, votre score (solde et points en jeu), votre groupe et vos badges. Un administrateur peut aussi proposer votre nom comme réponse à un pari (par exemple « Qui gagne le tournoi de baby-foot ? »).</li>
+                        <li><strong>Personne</strong>, ni vos collègues ni les administrateurs de votre entreprise, ne voit ce que vous avez misé, sur quelle réponse, ni combien.</li>
+                        <li><strong>Les administrateurs de votre entreprise</strong> gèrent votre compte (nom, email, groupe, activation) et peuvent vous créditer des points.</li>
+                        <li><strong>Les autres entreprises</strong> ne voient rien de vous, même lorsque vous participez à une campagne publique.</li>
+                        <li><strong>Les annonces Slack</strong> que votre entreprise peut activer ne mentionnent que des campagnes, des paris et des nombres de gagnants, jamais de noms.</li>
+                    </ul>
+                </section>
+
+                <section class="card" id="prestataires">
+                    <h2>5. Avec qui nous les partageons</h2>
+                    <p>Nous ne vendons ni ne louons vos données. Nous faisons appel aux prestataires suivants, uniquement pour faire fonctionner le service :</p>
+                    <ul>
+                        <li><strong>Google</strong> : connexion avec votre compte Google.</li>
+                        <li><strong>Expo (650 Industries, États-Unis)</strong>, puis <strong>Apple</strong> ou <strong>Google</strong> selon votre téléphone : acheminement des notifications. Ils reçoivent le jeton de votre appareil et le texte de la notification.</li>
+                        <li><strong><span class="todo">[HÉBERGEUR DE L’API ET DE LA BASE DE DONNÉES]</span></strong> : hébergement des données, <span class="todo">[PAYS]</span>.</li>
+                        <li><strong><span class="todo">[PRESTATAIRE D’ENVOI D’EMAILS]</span></strong> : envoi des emails liés au service.</li>
+                        <li><strong>Slack</strong>, si votre entreprise l’a connecté : réception des annonces, qui ne contiennent aucune donnée personnelle.</li>
+                        <li><strong>GitHub</strong> (hébergement du site) et <strong>Google Fonts</strong> (police du site) : ils reçoivent l’adresse IP des visiteurs du site, comme tout serveur web.</li>
+                    </ul>
+                    <p>Certains de ces prestataires sont situés hors de l’Union européenne, notamment aux États-Unis. Ces transferts sont encadrés par les clauses contractuelles types de la Commission européenne ou par le cadre de protection des données UE–États-Unis (Data Privacy Framework).</p>
+                    <p>Nous pouvons enfin communiquer des données si la loi nous y oblige.</p>
+                </section>
+
+                <section class="card" id="conservation">
+                    <h2>6. Combien de temps nous les conservons</h2>
+                    <ul>
+                        <li><strong>Compte et activité</strong> : tant que votre compte est actif. Lorsqu’un administrateur le désactive, vous ne pouvez plus vous connecter, vous disparaissez des classements et les jetons de vos appareils sont supprimés.</li>
+                        <li><strong>Après la désactivation</strong> : votre historique de points et de mises est conservé pour que les comptes de votre entreprise restent justes (classements passés, répartition des votes). Votre nom et votre email sont supprimés ou anonymisés au plus tard <span class="todo">[DURÉE, ex. 12 mois]</span> après la désactivation, ou plus tôt sur demande (voir ci-dessous).</li>
+                        <li><strong>Jeton de notification</strong> : supprimé lorsque vous vous déconnectez de l’app ou que votre compte est désactivé.</li>
+                        <li><strong>Fin du contrat avec votre entreprise</strong> : les données de ses membres sont supprimées dans un délai de <span class="todo">[DURÉE, ex. 3 mois]</span>.</li>
+                        <li><strong>Demandes de contact</strong> : 3 ans après notre dernier échange.</li>
+                    </ul>
+                </section>
+
+                <section class="card" id="suppression">
+                    <h2>7. Supprimer votre compte et vos données</h2>
+                    <p>Votre compte est créé par votre entreprise. Pour le supprimer, vous pouvez :</p>
+                    <ul>
+                        <li>demander à un administrateur de votre entreprise de désactiver votre compte ;</li>
+                        <li>ou nous écrire directement à <span class="todo">[EMAIL DE CONTACT]</span> depuis l’adresse email de votre compte, avec l’objet « Suppression de mon compte Betty ».</li>
+                    </ul>
+                    <p>Nous désactivons alors votre compte et supprimons ou anonymisons votre nom et votre email dans un délai de 30 jours. Votre historique de mises et de votes est conservé de façon anonyme, pour ne pas fausser les résultats déjà réglés de vos collègues. Nous vous confirmons la suppression par email.</p>
+                </section>
+
+                <section class="card" id="droits">
+                    <h2>8. Vos droits</h2>
+                    <p>Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d’un droit d’accès, de rectification, d’effacement, de limitation, de portabilité et d’opposition, ainsi que du droit de définir des directives sur le sort de vos données après votre décès. Lorsque le traitement repose sur votre consentement (notifications), vous pouvez le retirer à tout moment, dans les réglages de l’app ou de votre téléphone.</p>
+                    <p>Pour exercer ces droits, écrivez à <span class="todo">[EMAIL DE CONTACT]</span>. Comme nous agissons pour le compte de votre entreprise, nous pouvons lui transmettre votre demande ; dans tous les cas, nous y répondons dans un délai d’un mois.</p>
+                    <p>Si vous estimez que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à la CNIL (<a href="https://www.cnil.fr">www.cnil.fr</a>).</p>
+                </section>
+
+                <section class="card" id="securite">
+                    <h2>9. Sécurité</h2>
+                    <p>Les échanges entre l’app et nos serveurs sont chiffrés (HTTPS). Sur votre téléphone, votre session est conservée dans le stockage sécurisé du système (Trousseau iOS, Keystore Android). Chaque entreprise ne voit que ses propres données, les accès d’administration sont réservés aux administrateurs, et les clés d’intégration de votre entreprise sont stockées sous forme chiffrée ou hachée.</p>
+                </section>
+
+                <section class="card" id="mineurs">
+                    <h2>10. Âge minimum</h2>
+                    <p>Betty est réservée aux collaborateurs des entreprises clientes et ne s’adresse pas aux personnes de moins de 18 ans.</p>
+                </section>
+
+                <section class="card" id="cookies">
+                    <h2>11. Cookies</h2>
+                    <p>Le site ne dépose aucun cookie. La version web de l’application utilise uniquement un cookie de session, indispensable pour vous garder connecté ; il ne sert à aucun suivi et ne nécessite donc pas votre consentement.</p>
+                </section>
+
+                <section class="card" id="modifications">
+                    <h2>12. Modifications</h2>
+                    <p>Nous pouvons faire évoluer cette politique, par exemple lorsque l’app gagne une fonctionnalité. La date de dernière mise à jour figure en haut de cette page, et nous vous informons de tout changement important.</p>
+                </section>
+            </article>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <a href="./" class="brand" aria-label="Betty, accueil">
+                    <!-- TODO: replace with the Betty logo and logotype -->
+                    <span class="logo-placeholder" aria-hidden="true">Logo</span>
+                    <span class="logotype-placeholder">Betty</span>
+                </a>
+                <nav aria-label="Liens de pied de page">
+                    <a href="./">Accueil</a>
+                    <a href="./#faq">FAQ</a>
+                    <a href="confidentialite.html">Confidentialité</a>
+                    <a href="confidentialite.html#suppression">Supprimer mon compte</a>
+                    <a href="./#contact">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
